@@ -1,0 +1,12 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    <h2 class="post-title"><span>{{page.title}}</span></h2>
+    <time>{{page.date | date_to_string}}</time>
+  </header>
+  <section class="post-content">
+    {{content}}
+  </section>
+</article>
