@@ -85,7 +85,7 @@ time {
 code {
   background-color: #eee8d5;
   color: #586e75;
-  font-family: monospace;
+  font-family: Inconsolata-g, Consolas, monospace;
 }
 
 .highlight {
@@ -103,7 +103,6 @@ code {
 .highlight code {
   background-color: inherit;
   color: inherit;
-  font-family: Inconsolata-g, Consolas, monospace;
 }
 
 .site-footer {
