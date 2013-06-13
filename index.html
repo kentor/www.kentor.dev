@@ -2,11 +2,15 @@
 layout: default
 title: kentor.me
 ---
-<ul class="posts-index">
 {% for post in site.posts %}
-  <li class="posts-entry">
-    <a href="{{post.url}}">{{post.title}}</a>
-    <div><time>{{post.date | date_to_string}}</time></div>
-  </li>
+  <article class="post">
+    <header class="post-header">
+      <h2 class="post-title"><span><a href="{{post.url}}">{{post.title}}</a></span></h2>
+      <time>{{post.date | date_to_string}}</time>
+    </header>
+    <section class="post-content">
+      {{post.excerpt}}
+    </section>
+    <a href="{{post.url}}" class="post-read-more">Read more →</a>
+  </article>
 {% endfor %}
-</ul>
