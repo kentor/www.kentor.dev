@@ -54,6 +54,7 @@ time {
 .post-title {
   color: #b58900;
   position: relative;
+  text-shadow: 0 1px #eee8d5;
 }
 
 .post-title:before {
