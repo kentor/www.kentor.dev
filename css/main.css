@@ -83,6 +83,10 @@ time {
   text-align: justify;
 }
 
+.post-content img {
+  max-width: 100%;
+}
+
 code {
   background-color: #eee8d5;
   color: #586e75;
