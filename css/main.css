@@ -138,3 +138,9 @@ and (max-device-width : 568px) {
     font-size: 16px;
   }
 }
+
+/* Utils */
+
+.center {
+  text-align: center;
+}
