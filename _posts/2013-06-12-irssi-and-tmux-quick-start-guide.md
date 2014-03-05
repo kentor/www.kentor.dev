@@ -46,4 +46,6 @@ Finally, you can see how tmux works by opening up a new shell or terminal on you
 
 You should see a replica of the irssi window, and whatever you type instantly shows up on your other instance of tmux. That's it for the basics.
 
+Note: If you've accidentally created a new tmux session by typing `tmux` instead of `tmux att`, you can kill the current tmux session by pressing `Ctrl+b` then `x`.
+
 Pro tip: if you have a smart phone with ssh, you can connect to your tmux and irssi session. If your ssh client doesn't have the Page Up and Page Down keys, use Alt+P and Alt+N instead.
