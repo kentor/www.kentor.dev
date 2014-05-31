@@ -1,6 +1,6 @@
 name: kentor.me
 markdown: redcarpet
 permalink: /posts/:title/
-pygments: true
+highlighter: pygments
 redcarpet:
   extensions: ["autolink", "fenced_code_blocks", "no_intra_emphasis", "strikethrough", "superscript", "with_toc_data"]
