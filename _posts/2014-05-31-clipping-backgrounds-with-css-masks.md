@@ -2,7 +2,7 @@
 layout: post
 title: Clipping backgrounds using css masks
 ---
-This article shows a css technique for clipping the background of a block element to expose the background behind it. The result looks something like this:
+This article shows a css technique for clipping the background of a block element to expose the background underneath it. The result looks something like this:
 
 <style>
 #container {
@@ -36,7 +36,7 @@ This article shows a css technique for clipping the background of a block elemen
   </div>
 </div>
 
-I am using the ness logo (the one on top of the page) to cut out the semi-transparent white background to expose the striped gray background underneath.
+As you can see, I used the ness image (the little guy on top of the page) to cut out the semi-transparent white background to expose the striped gray background underneath.
 
 The source for that is the following:
 
@@ -74,7 +74,7 @@ The source for that is the following:
 </div>
 ```
 
-I will elaborate a bit on how this works. CSS masks work by specifying an image to use for the mask. An opaque pixel in the mask image will tell the browser to render the corresponding pixel of the element; a transparent pixel in the mask will have the opposite effect. We can see this effect by using a transparent to opaque striped image as the mask to our ness logo:
+Evidently, this effect is achieved by CSS masks which I shall elaborate. CSS masks are specified by multiple css properties starting with `-webkit-mask-`, the most important of which is the mask image specified by `-webkit-mask-image`. An opaque pixel in the mask image tells the browser to render the corresponding pixel of the element; a transparent pixel in the mask image has the opposite effect. We can see this by using a transparent-to-opaque striped image as the mask of our element with the ness image:
 
 <div style="text-align: center">
   Image: <div style="display: inline-block; border: 1px solid black; vertical-align: middle;">
@@ -90,7 +90,7 @@ I will elaborate a bit on how this works. CSS masks work by specifying an image 
   </div>
 </div>
 
-As you can see, the opaque (red) pixels of mask told the browser to render the corresponding pixels of the image, and the transparent pixels left those pixels of the image unrendered.
+As you can see, the pixels of the ness image are rendered only where the corresponding pixel in the mask image is opaque (red).
 
 So to achieve what we made in the beginning of the article where we have a semi-transparent white background with the ness image cut out, the mask image has to look like it's opaque everywhere except the transparent cut out of the ness image in the center. In other words the mask image has to look something like this:
 
@@ -100,12 +100,11 @@ So to achieve what we made in the beginning of the article where we have a semi-
   -webkit-mask-position: center center;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 48px 48px, auto;
-  background: #849900;
+  background: #dc322f;
   height: 160px;
   margin: 20px;
 "></div>
 
+Since we only have the single ness image to work with, which is not enough to recreate the mask image above, we use multiple images and compose them into one mask image. In the stylesheet, we specifiy two images to use as the mask. The first is the ness image, and the second is an image that is opaque everywhere (achieved by using a gradient with only red color stops).
 
-To achieve that with just the ness image that we have, we use multiple mask images and then compose them into one. In the stylesheet, we specified two images to use as the mask, the first is the ness image and the second is just an image that is white (could be any opaque color) everywhere (achieved by using a gradient with only white color stops). The browser composes the final mask image by operating on the specified images from right to left.
-
-We start with the all white image since that's the last image specified in `-webkit-mask-image`. Then we compose the ness image on top of the white image. But when the browser is composing ness, we specified `-webkit-mask-composite: xor` which tells the browser that overlapping pixels between the ness image and the white image become fully transparent if they are both fully opaque. That is how the transparent cut out of ness in the all white image is achieved.
+The browser composes the final mask image by operating on those images right to left. We start with the all red image since that's the rightmost image specified in the `-webkit-mask-image` property. We then compose the ness image on top of this red image, following the composition directive `xor` specified in the `-webkit-mask-composite` property. The `xor` composition directive tells the browser that overlapping pixels between the source image the destination image become fully transparent if they are both fully opaque. That basically means that the ness image will be cut out of the red image, leaving us with an image mask like the one above.
