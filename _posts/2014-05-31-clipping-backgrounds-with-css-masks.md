@@ -92,7 +92,7 @@ Evidently, this effect is achieved by CSS masks which I shall elaborate. CSS mas
 
 As you can see, the pixels of the ness image are rendered only where the corresponding pixel in the mask image is opaque (red).
 
-So to achieve what we made in the beginning of the article where we have a semi-transparent white background with the ness image cut out, the mask image has to look like it's opaque everywhere except the transparent cut out of the ness image in the center. In other words the mask image has to look something like this:
+So to achieve what we made in the beginning of the article, the mask image has to look like it's opaque everywhere except the transparent cut out of the ness image in the center. In other words the mask image has to look something like this:
 
 <div style="
   -webkit-mask-composite: xor;
@@ -105,6 +105,6 @@ So to achieve what we made in the beginning of the article where we have a semi-
   margin: 20px;
 "></div>
 
-Since we only have the single ness image to work with, which is not enough to recreate the mask image above, we use multiple images and compose them into one mask image. In the stylesheet, we specifiy two images to use as the mask. The first is the ness image, and the second is an image that is opaque everywhere (achieved by using a gradient with only red color stops).
+Since we only have the single ness image to work with, which by itself isn't enough to recreate the mask image above, we use multiple images and compose them into one mask image. In the stylesheet, we specifiy two images to use as the mask. The first is the ness image, and the second is an image that is opaque everywhere (achieved by using a gradient with only red color stops).
 
-The browser composes the final mask image by operating on those images right to left. We start with the all red image since that's the rightmost image specified in the `-webkit-mask-image` property. We then compose the ness image on top of this red image, following the composition directive `xor` specified in the `-webkit-mask-composite` property. The `xor` composition directive tells the browser that overlapping pixels between the source image the destination image become fully transparent if they are both fully opaque. That basically means that the ness image will be cut out of the red image, leaving us with an image mask like the one above.
+The browser composes the final mask image by operating on those images right to left. We start with the all red image since that's the rightmost image specified in the `-webkit-mask-image` property. We then compose the ness image on top of this red image, following the composition directive `xor` specified in the `-webkit-mask-composite` property. The `xor` composition directive tells the browser that overlapping pixels between the source (ness) image and the destination (red) image become fully transparent if they are both fully opaque. The browser will carve out the ness image from the red image, leaving us with the desired image mask.
