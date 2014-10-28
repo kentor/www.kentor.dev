@@ -22,7 +22,7 @@ $('div').css('background-color', pastel);
 
 Look at these randomly generated babies:
 
-<div id="pastels" style="display: flex; justify-content: space-between;">
+<div id="pastels" style="display: -webkit-flex; -webkit-justify-content: space-between;">
   <script>
     var hue, pastel, i;
     var pastels = document.getElementById('pastels');
