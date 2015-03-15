@@ -25,9 +25,10 @@ The event capturing phase comes before the event bubbling phase and traverses th
 Adding an event handler that gets called in the event capturing case requires plain ol' javascript. JQuery does not provide a way to do this, probably because IE8 and below does not support event capturing. The code looks something like this:
 
 ```javascript
-document.addEventListener('click', function(event) {
-  if ($(event.target).closest('#container').length > 0) return;
-  // code to execute when clicked outside of #container
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('container').contains(e.target)) {
+    // code to execute when clicked outside of #container
+  }
 }, true);
 ```
 
