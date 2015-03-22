@@ -3,4 +3,10 @@ markdown: redcarpet
 permalink: /posts/:title/
 highlighter: pygments
 redcarpet:
-  extensions: ["autolink", "fenced_code_blocks", "no_intra_emphasis", "strikethrough", "superscript", "with_toc_data"]
+  extensions:
+    - autolink
+    - fenced_code_blocks
+    - no_intra_emphasis
+    - strikethrough
+    - superscript
+    - with_toc_data
