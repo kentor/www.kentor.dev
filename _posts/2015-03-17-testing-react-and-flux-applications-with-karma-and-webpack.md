@@ -120,7 +120,7 @@ describe('MemberStore', () => {
     jasmine.clock().uninstall();
   });
 
-  it('saves member when received', function() {
+  it('saves member when received', () => {
     MemberAction.memberReceived({ name: 'Baz Fu' });
     jasmine.clock().tick(); // Advance the clock to the next tick
     expect(MemberStore.getAll().first().get('name')).toBe('Baz Fu');
