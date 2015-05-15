@@ -11,6 +11,7 @@ As a prerequisite, the article titled [Testing ReactJS Components with Karma and
 To summarize, the setup explained in that article uses `karma-webpack` to bundle all of your tests into a single file which Karma will load and run in the browser. The npm packages that you will need, excluding the ones for your application, are:
 
 - karma
+- karma-cli
 - karma-jasmine
 - karma-phantomjs-launcher
 - karma-webpack
@@ -79,7 +80,7 @@ That's all well and good for testing React components, but testing Flux applicat
 
 ### Testing Flux Stores
 
-The problem with Flux stores is that stores are usually singletons with state, and [singletons with state](http://misko.hevery.com/code-reviewers-guide/flaw-brittle-global-state-singletons/) can quite possibly be one of the worst things to test because its state persists between tests. It becomes hard to predict the state of the store when many parts of your application interact with it throughout the test suite. You might be thinking that you could just implement some method to reset the state of the store, but doing this for every store is error prone and a maintainability nightmare.
+The problem with Flux stores is that stores are usually singletons with state, and [singletons with state](http://misko.hevery.com/code-reviewers-guide/flaw-brittle-global-state-singletons/) can quite possibly be one of the worst things to test because their state persists between tests. It becomes hard to predict the state of the store when many parts of your application interact with it throughout the test suite. You might be thinking that you could just implement some method to reset the state of the store, but doing this for every store is error prone and a maintainability nightmare.
 
 Jest solves this problem by running every test case in its own environment. In otherwords, when we `require` a module in a test case or in a `beforeEach` block, the module imported is a fresh instance. This is exactly the behavior we want when testing stores!
 
@@ -161,7 +162,11 @@ require.cache[require.resolve('axios')].exports = mockAxios;
 
 The benefit of this over rewire is that every call to `require('axios')` is mocked, not just in the module that we rewired.
 
+**Edit:** Mocking an http request library is probably a bad example. For that you should use something like [jasmine-ajax](https://github.com/jasmine/jasmine-ajax).
+
 ### Closing
-Using Karma and Webpack over Jest to test my React and Flux application, I saw around a 50x speed improvement in running my test suite. However, it takes a bit of effort to set up compared to Jest, and mocking a module's dependencies isn't as easy. Another problem is that when running Karma with `--no-single-run`, new test files won't automatically be added to the Webpack bundle, so restarting the Karma runner will be necessary. I haven't figured out a way fix that problem yet.
+Using Karma and Webpack over Jest to test my React and Flux application, I saw around a 50x speed improvement in running my test suite. However, it takes a bit of effort to set up compared to Jest, and mocking a module's dependencies isn't as easy. ~~Another problem is that when running Karma with `--no-single-run`, new test files won't automatically be added to the Webpack bundle, so restarting the Karma runner will be necessary. I haven't figured out a way fix that problem yet.~~ (Now Fixed!)
 
 Jest is really nice since it's so easy to set up, but that it's so [slow](https://github.com/facebook/jest/issues/116) is a deal breaker for me, and I don't know if it'll ever be fixed. If it gets faster I might think about switching back for its benefits, but until then I am enjoying the sub 200ms run times that will allow me to TDD.
+
+**Edit:** Sample repository demonstrating this technique, [react-flux-testing](https://github.com/kentor/react-flux-testing).
