@@ -1,5 +1,6 @@
 const cssnano = require('cssnano');
 const cssnext = require('cssnext');
+const eslint = require('eslint');
 const ghpages = require('gh-pages');
 const gulp = require('gulp');
 const liveServer = require('live-server');
@@ -56,18 +57,18 @@ gulp.task('css:build', () => {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('deploy', ['build'], callback => {
+gulp.task('deploy', ['build'], done => {
   ghpages.publish(path.join(__dirname, 'public'), {
     branch: 'master',
-  }, callback);
+  }, done);
 });
 
-gulp.task('generate', callback => {
+gulp.task('generate', done => {
   webpack(webpackConfig, (err, stats) => {
     if (err) {
       console.log(err.stack);
     }
-    callback();
+    done();
   });
 });
 
@@ -79,10 +80,26 @@ gulp.task('generate:watch', ['generate'], () => {
   ], ['generate']);
 });
 
+gulp.task('lint', done => {
+  const cli = new eslint.CLIEngine();
+  const formatter = cli.getFormatter();
+  const report = cli.executeOnFiles(['.']);
+  console.log(formatter(report.results));
+  done();
+});
+
+gulp.task('lint:watch', ['lint'], () => {
+  gulp.watch([
+    '*.js',
+    'src/js/**/*',
+  ], ['lint']);
+});
+
 gulp.task('watch', [
   'assets',
   'css:watch',
   'generate:watch',
+  'lint:watch',
 ], () => {
   liveServer.start({
     port: 4069,
