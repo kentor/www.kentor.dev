@@ -1,0 +1,45 @@
+{
+  "name": "kentor.github.io",
+  "version": "1.0.0",
+  "description": "blog",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run gulp -- build",
+    "deploy": "npm run gulp -- deploy",
+    "gulp": "node --harmony `which gulp`",
+    "start": "npm run watch",
+    "watch": "npm run gulp -- watch"
+  },
+  "author": "Kenneth Chung",
+  "homepage": "http://kentor.me/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kentor/kentor.github.io.git"
+  },
+  "devDependencies": {
+    "babel": "^5.6.23",
+    "babel-core": "^5.7.4",
+    "babel-loader": "^5.3.2",
+    "cssnano": "^2.1.0",
+    "cssnext": "^1.8.1",
+    "eslint": "^0.24.1",
+    "eslint-plugin-react": "^2.7.1",
+    "front-matter": "^1.0.0",
+    "gh-pages": "^0.3.1",
+    "gulp": "^3.9.0",
+    "gulp-postcss": "^5.1.9",
+    "gulp-sourcemaps": "^1.5.2",
+    "live-server": "^0.7.1",
+    "marky-markdown": "^5.3.0",
+    "moment": "^2.10.3",
+    "node-libs-browser": "^0.5.2",
+    "normalize.css": "^3.0.3",
+    "postcss-import": "^6.1.1",
+    "postcss-nested": "^0.3.2",
+    "react": "^0.13.3",
+    "react-geomicons": "^2.0.4",
+    "react-router": "^0.13.3",
+    "static-site-generator-webpack-plugin": "^1.0.0",
+    "webpack": "^1.10.1"
+  }
+}

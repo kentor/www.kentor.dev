@@ -1,0 +1,4 @@
+---
+rules:
+  no-console: 2
+  object-shorthand: [2, always]

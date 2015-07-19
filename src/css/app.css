@@ -1,0 +1,84 @@
+@import "normalize.css/normalize";
+@import "solarized";
+
+:root {
+  --sans-serif-font: Lato, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--solarized-base3);
+  color: var(--solarized-base00);
+  font-family: var(--sans-serif-font);
+  margin: auto;
+  max-width: 780px;
+  padding: 4px 2rem 0;
+}
+
+a {
+  color: var(--solarized-blue);
+  text-decoration: none;
+}
+
+/* from marky-markdown */
+.deep-link a {
+  color: inherit;
+  font-family: var(--sans-serif-font);
+}
+
+.Flair {
+  background-image: url(data:image/bmp;base64,Qk1OAAAAAAAAADYAAAAoAAAACAAAAAEAAAABABgAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAIm1FkvLLzLcgjbTxHFs0oommKEqAJmF);
+  background-size: 100% 4px;
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.TimeBadge {
+  background-color: var(--solarized-base2);
+  border-radius: 2px;
+  font-family: Courier New, monospace;
+  font-size: 12px;
+  padding: 3px 6px 2px;
+  vertical-align: middle;
+}
+
+.Site-header {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.Site-footer {
+  border-top: 1px dotted;
+  font-size: 1.6rem;
+  line-height: 1em;
+  margin: 2rem 0 0;
+  padding: 2rem 0;
+  text-align: center;
+
+  a {
+    color: inherit;
+    margin: 0 0.5rem;
+
+    &:hover {
+      color: var(--solarized-base01);
+    }
+  }
+}
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+@import "code";
+@import "post";

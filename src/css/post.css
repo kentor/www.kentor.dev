@@ -1,0 +1,48 @@
+.Post {
+  text-align: center;
+}
+
+.Post-header {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.Post-title {
+  color: var(--solarized-yellow);
+  font-weight: 400;
+  position: relative;
+
+  &:before {
+    border-top: 1px dotted;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  span {
+    background-color: var(--solarized-base3);
+    display: inline-block;
+    padding: 0 0.75rem;
+  }
+}
+
+.Post-content {
+  font-family: Georgia, serif;
+  line-height: 1.5rem;
+  text-align: left;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.Post-readMore {
+  text-align: center;
+}

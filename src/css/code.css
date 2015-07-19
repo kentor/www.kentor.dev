@@ -1,0 +1,19 @@
+code,
+pre {
+  font-family: consolas, monospace;
+}
+
+code {
+  background-color: var(--solarized-base2);
+}
+
+.editor {
+  font-size: 0.7rem;
+  line-height: 1.5em;
+  margin: 0;
+  overflow: auto;
+  padding: 10px;
+  text-align: left;
+}
+
+@import "syntax";
