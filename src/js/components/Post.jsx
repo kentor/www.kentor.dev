@@ -1,3 +1,4 @@
+import DateBadge from './DateBadge.jsx';
 import React from 'react';
 
 export default class PostExcerpt extends React.Component {
@@ -12,9 +13,7 @@ export default class PostExcerpt extends React.Component {
               {post.title}
             </span>
           </h2>
-          <time className="TimeBadge">
-            {post.createdOn.format('D MMM YYYY')}
-          </time>
+          <DateBadge date={post.createdOn} />
         </header>
         <section
           className="Post-content"

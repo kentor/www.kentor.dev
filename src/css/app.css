@@ -41,7 +41,7 @@ a {
   top: 0;
 }
 
-.TimeBadge {
+.DateBadge {
   background-color: var(--solarized-base2);
   border-radius: 2px;
   font-family: Courier New, monospace;
