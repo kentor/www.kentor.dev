@@ -2,7 +2,8 @@
 @import "solarized";
 
 :root {
-  --sans-serif-font: Lato, 'Helvetica Neue', Arial, sans-serif;
+  --sans-serif-font: Lato, Helvetica Neue, Arial, sans-serif;
+  --serif-font: Georgia, Times, serif;
   font-size: 20px;
 }
 
