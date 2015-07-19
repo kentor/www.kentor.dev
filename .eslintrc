@@ -31,7 +31,7 @@ rules:
   no-multiple-empty-lines: 2
   quotes: [2, single, avoid-escape]
   space-after-keywords: 2
-  space-before-function-parentheses: [2, never]
+  space-before-function-paren: [2, never]
   space-infix-ops: 2
 
   ## eslint-plguin-react rules
