@@ -3,8 +3,9 @@ pre {
   font-family: consolas, monospace;
 }
 
-code {
+.Post-content > p > code {
   background-color: var(--solarized-base2);
+  word-break: break-word;
 }
 
 .editor {
