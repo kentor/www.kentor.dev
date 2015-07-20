@@ -2,6 +2,6 @@
 
 ## About
 
-This is the source to my blog. It uses [React](https://facebook.github.io/react/) combined with the [static-site-generator-webpack-plugin](static-site-generator-webpack-plugin) for [Webpack](http://webpack.github.io/) to generate a static site.
+This is the source to my [blog](http://kentor.me/). It uses [React](https://facebook.github.io/react/) combined with the [static-site-generator-webpack-plugin](static-site-generator-webpack-plugin) for [Webpack](http://webpack.github.io/) to generate a static site.
 
 Read [Static Site Generation with React and Webpack](http://jxnblk.com/writing/posts/static-site-generation-with-react-and-webpack/) for a primer on generating a static site with React. I use a different directory structure that separates node code, application code, and deployment files more cleanly.

@@ -1,3 +1,4 @@
+const autoprefixer = require('autoprefixer-core');
 const cssnano = require('cssnano');
 const cssnext = require('cssnext');
 const eslint = require('eslint');
@@ -32,6 +33,7 @@ gulp.task('css', () => {
     postcssImport,
     postcssNested,
     cssnext(),
+    autoprefixer,
   ];
 
   return gulp.src('src/css/app.css')
@@ -50,6 +52,7 @@ gulp.task('css:build', () => {
     postcssImport,
     postcssNested,
     cssnext(),
+    autoprefixer,
     cssnano,
   ];
 

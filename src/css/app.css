@@ -73,10 +73,16 @@ a {
 }
 
 @media only screen
-and (min-device-width : 320px)
-and (max-device-width : 568px) {
+and (min-device-width: 320px)
+and (max-device-width: 568px) {
   :root {
     font-size: 16px;
+  }
+}
+
+@media only screen and (max-resolution: 1dppx) {
+  body {
+    -webkit-font-smoothing: antialiased;
   }
 }
 
