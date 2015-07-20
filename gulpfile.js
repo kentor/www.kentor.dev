@@ -15,6 +15,7 @@ const webpackConfig = require('./webpack.config.js');
 gulp.task('assets', () => {
   return gulp.src([
     'src/CNAME',
+    'src/fonts/**/*',
     'src/images/**/*',
   ], { base: 'src' })
     .pipe(gulp.dest('public'));

@@ -1,9 +1,9 @@
 @import "normalize.css/normalize";
+@import "fonts";
 @import "solarized";
 
 :root {
-  --sans-serif-font: Lato, Helvetica Neue, Arial, sans-serif;
-  --serif-font: Georgia, Times, serif;
+  --serif-font: Vollkorn, Georgia, sans-serif;
   font-size: 20px;
 }
 
@@ -14,7 +14,7 @@
 body {
   background-color: var(--solarized-base3);
   color: var(--solarized-base00);
-  font-family: var(--sans-serif-font);
+  font-family: var(--serif-font);
   margin: auto;
   max-width: 780px;
   padding: 4px 2rem 0;
@@ -28,7 +28,6 @@ a {
 /* from marky-markdown */
 .deep-link a {
   color: inherit;
-  font-family: var(--sans-serif-font);
 }
 
 .Flair {
