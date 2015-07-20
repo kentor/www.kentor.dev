@@ -4,13 +4,14 @@ pre {
 }
 
 .Post-content > p > code {
-  background-color: var(--solarized-base2);
+  color: var(--solarized-magenta);
+  font-size: 0.9em;
   word-break: break-word;
 }
 
 .editor {
   font-size: 0.7rem;
-  line-height: 1.5em;
+  line-height: 1.5;
   margin: 0;
   overflow: auto;
   padding: 10px;
