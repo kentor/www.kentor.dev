@@ -56,10 +56,9 @@ a {
 
 .Site-footer {
   border-top: 1px dotted;
-  font-size: 1.6rem;
   line-height: 1em;
   margin: 2rem 0 0;
-  padding: 2rem 0;
+  padding: 2rem 0 2.5rem;
   text-align: center;
 
   a {

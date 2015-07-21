@@ -2,6 +2,7 @@ const posts = require('./posts');
 
 const routes = [
   '/',
+  '/about/',
 ];
 posts.forEach(post => routes.push(post.href));
 
