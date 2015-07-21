@@ -84,9 +84,11 @@ gulp.task('generate:watch', ['generate'], () => {
   ], ['generate']);
 });
 
+const cli = new eslint.CLIEngine({
+  extensions: ['.js', '.jsx'],
+});
+const formatter = cli.getFormatter();
 gulp.task('lint', done => {
-  const cli = new eslint.CLIEngine();
-  const formatter = cli.getFormatter();
   const report = cli.executeOnFiles(['.']);
   console.log(formatter(report.results));
   done();
