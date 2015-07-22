@@ -1,5 +1,6 @@
 const data = require('./data');
 const StaticSiteGenerator = require('static-site-generator-webpack-plugin');
+const routes = require('./routes');
 
 module.exports = {
   entry: './src/js/index.js',
@@ -14,6 +15,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new StaticSiteGenerator('bundle.js', data.routes, data),
+    new StaticSiteGenerator('bundle.js', routes, data),
   ],
 };
