@@ -1,7 +1,3 @@
-const data = require('./data');
-const StaticSiteGenerator = require('static-site-generator-webpack-plugin');
-const routes = require('./routes');
-
 module.exports = {
   entry: './src/js/index.js',
   output: {
@@ -14,7 +10,4 @@ module.exports = {
       { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
     ],
   },
-  plugins: [
-    new StaticSiteGenerator('bundle.js', routes, data),
-  ],
 };

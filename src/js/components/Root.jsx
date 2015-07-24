@@ -10,7 +10,7 @@ export default class Root extends React.Component {
 
     let post;
     if (params && params.slug) {
-      post = posts.get(params.slug);
+      post = posts[params.slug];
     }
 
     return (
