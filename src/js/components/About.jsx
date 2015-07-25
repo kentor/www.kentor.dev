@@ -3,10 +3,10 @@ import React from 'react';
 
 const tech = Immutable.OrderedMap({
   'Babel': 'https://babeljs.io/',
+  'Gulp': 'http://gulpjs.com/',
   'PostCSS': 'https://github.com/postcss/postcss',
-  'React': 'https://facebook.github.io/react/',
   'React Router': 'https://github.com/rackt/react-router',
-  'Static Site Generator Webpack Plugin': 'https://github.com/markdalgleish/static-site-generator-webpack-plugin',  // eslint-disable-line
+  'React': 'https://facebook.github.io/react/',
   'Webpack': 'http://webpack.github.io/',
 });
 
@@ -21,8 +21,8 @@ export default class About extends React.Component {
         </header>
         <section className="Post-content">
           <p>
-            This blog is a statically generated site built on React and Webpack.
-            It is deployed to Github Pages.
+            This blog is a statically generated site built with React and
+            Node.js.
           </p>
           <p>
             A partial list of technologies used:
