@@ -97,6 +97,7 @@ gulp.task('lint', done => {
 gulp.task('lint:watch', ['lint'], () => {
   gulp.watch([
     '*.js',
+    '.eslintrc',
     'src/js/**/*',
   ], ['lint']);
 });
