@@ -6,6 +6,7 @@
   "scripts": {
     "deploy": "gulp deploy",
     "generate": "gulp generate",
+    "gulp": "gulp",
     "lint": "eslint . --ext .js,.jsx",
     "start": "gulp watch",
     "watch": "gulp watch"
