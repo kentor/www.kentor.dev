@@ -1,6 +1,7 @@
 const autoprefixer = require('autoprefixer-core');
 const cssnano = require('cssnano');
 const cssnext = require('cssnext');
+const del = require('del');
 const eslint = require('eslint');
 const ghpages = require('gh-pages');
 const gulp = require('gulp');
@@ -22,12 +23,12 @@ var pw;
 
 gulp.task('generate', ['js'], function(done) {
   const renderer = reload('./public/bundle');
-  pw = new PagesWriter({
+  pw = new PagesWriter();
+  pw.setState({
     paths: paths(),
     props: props(),
     renderer: renderer,
-  });
-  done();
+  }).once('write', done);
 });
 
 gulp.task('paths:watch', ['generate'], function() {
@@ -70,6 +71,10 @@ gulp.task('build', [
   'css:build',
   'generate',
 ]);
+
+gulp.task('clean', function(done) {
+  del('public', done);
+});
 
 gulp.task('css', function() {
   const processors = [
