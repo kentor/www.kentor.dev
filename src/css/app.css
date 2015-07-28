@@ -54,6 +54,13 @@ a {
   text-align: center;
 }
 
+.Site-logo {
+  background-image: inline('ness.gif');
+  display: inline-block;
+  height: height('ness.gif');
+  width: width('ness.gif');
+}
+
 .Site-footer {
   border-top: 1px dotted;
   line-height: 1em;
