@@ -31,7 +31,7 @@ a {
 }
 
 .Flair {
-  background-image: url(data:image/bmp;base64,Qk1OAAAAAAAAADYAAAAoAAAACAAAAAEAAAABABgAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAIm1FkvLLzLcgjbTxHFs0oommKEqAJmF);
+  background-image: inline('colors.bmp');
   background-size: 100% 4px;
   height: 4px;
   left: 0;

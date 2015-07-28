@@ -11,6 +11,7 @@ const PagesWriter = require('./lib/PagesWriter');
 const path = require('path');
 const paths = require('./lib/paths');
 const postcss = require('gulp-postcss');
+const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
 const postcssNested = require('postcss-nested');
 const props = require('./lib/props');
@@ -76,14 +77,18 @@ gulp.task('clean', function(done) {
   del('public', done);
 });
 
-gulp.task('css', function() {
-  const processors = [
-    postcssImport,
-    postcssNested,
-    cssnext(),
-    autoprefixer,
-  ];
+const processors = [
+  postcssImport,
+  postcssNested,
+  cssnext(),
+  autoprefixer,
+  postcssAssets({
+    basePath: 'src/',
+    loadPaths: ['images/'],
+  }),
+];
 
+gulp.task('css', function() {
   return gulp.src('src/css/app.css')
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
@@ -96,16 +101,8 @@ gulp.task('css:watch', ['css'], function() {
 });
 
 gulp.task('css:build', function() {
-  const processors = [
-    postcssImport,
-    postcssNested,
-    cssnext(),
-    autoprefixer,
-    cssnano,
-  ];
-
   return gulp.src('src/css/app.css')
-    .pipe(postcss(processors))
+    .pipe(postcss(processors.concat(cssnano)))
     .pipe(gulp.dest('public'));
 });
 
