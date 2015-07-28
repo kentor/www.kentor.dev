@@ -12,7 +12,7 @@
 }
 
 body {
-  background-color: var(--solarized-base3);
+  background: var(--solarized-base3);
   color: var(--solarized-base00);
   font-family: var(--serif-font);
   margin: auto;
@@ -41,7 +41,7 @@ a {
 }
 
 .DateBadge {
-  background-color: var(--solarized-base2);
+  background: var(--solarized-base2);
   border-radius: 2px;
   font-family: Courier New, monospace;
   font-size: 12px;
@@ -55,7 +55,7 @@ a {
 }
 
 .Site-logo {
-  background-image: inline('ness.gif');
+  background: inline('ness.gif');
   display: inline-block;
   height: height('ness.gif');
   width: width('ness.gif');
