@@ -3,11 +3,11 @@ import React from 'react';
 
 const tech = Immutable.OrderedMap({
   'Babel': 'https://babeljs.io/',
+  'Browserify': 'http://browserify.org/',
   'Gulp': 'http://gulpjs.com/',
   'PostCSS': 'https://github.com/postcss/postcss',
   'React Router': 'https://github.com/rackt/react-router',
   'React': 'https://facebook.github.io/react/',
-  'Webpack': 'http://webpack.github.io/',
 });
 
 export default class About extends React.Component {

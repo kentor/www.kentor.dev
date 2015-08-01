@@ -1,4 +1,6 @@
+const assign = require('object-assign');
 const autoprefixer = require('autoprefixer-core');
+const browserify = require('browserify');
 const cssnano = require('cssnano');
 const cssnext = require('cssnext');
 const del = require('del');
@@ -16,13 +18,15 @@ const postcssImport = require('postcss-import');
 const postcssNested = require('postcss-nested');
 const props = require('./lib/props');
 const reload = require('require-reload')(require);
+const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
-const webpack = require('webpack');
-const webpackConfig = require('./webpack.config.js');
+const watchify = require('watchify');
 
 var pw;
 
-gulp.task('generate', ['js'], function(done) {
+gulp.task('generate', [
+  process.env.NODE_ENV === 'production' ? 'js:build' : 'js:watch',
+], function(done) {
   const renderer = reload('./public/bundle');
   pw = new PagesWriter();
   pw.setState({
@@ -112,17 +116,36 @@ gulp.task('deploy', ['build'], function(done) {
   }, done);
 });
 
-gulp.task('js', function(done) {
-  var initialDone;
-  webpack(webpackConfig).watch({}, function(err, stats) {
-    if (err) {
-      throw new gutil.PluginError('webpack', err);
-    }
-    if (!initialDone) {
-      done();
-      initialDone = true;
-    }
-  });
+gulp.task('js:watch', function() {
+  const b = browserify('./src/js/index.js', assign(watchify.args, {
+    bundleExternal: false,
+    standalone: 'render',
+  }));
+  const watcher = watchify(b);
+
+  watcher.on('update', rebundle);
+  watcher.on('log', gutil.log);
+
+  function rebundle() {
+    return watcher
+      .bundle()
+      .on('error', gutil.log.bind(gutil))
+      .pipe(source('bundle.js'))
+      .pipe(gulp.dest('public/'));
+  }
+
+  return rebundle();
+});
+
+gulp.task('js:build', function() {
+  return browserify('./src/js/index.js', {
+      bundleExternal: false,
+      standalone: 'render',
+    })
+    .bundle()
+    .on('error', gutil.log.bind(gutil))
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('public/'));
 });
 
 const cli = new eslint.CLIEngine({
