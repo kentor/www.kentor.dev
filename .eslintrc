@@ -16,7 +16,11 @@ rules:
   no-unused-vars: [2, args: none]
 
   ## Best Practices
+  consistent-return: 2
   curly: [2, multi-line]
+  dot-location: [2, property]
+  dot-notation: [2, {allowKeywords: true}]
+  eqeqeq: 2
   no-const-assign: 2
 
   ## Stylistic Issues
