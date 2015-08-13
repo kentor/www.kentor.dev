@@ -1,5 +1,5 @@
 ---
-title: Imperative creep in React
+title: Dealing with dependent states in React
 ---
 [React][r] is a declarative framework that allows us to describe how our
 components should look at any given point in time and will manage all the UI
