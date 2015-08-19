@@ -14,7 +14,7 @@ after the initial Webpack bundling.
 
 Our testing setup is based on the one explained in this article: [Testing
 ReactJS Components with Karma and Webpack][t]. Read that if you are unfamiliar
-with Karma and Webpack. To sumarize, this setup uses karma-webpack to bundle all
+with Karma and Webpack. To summarize, this setup uses karma-webpack to bundle all
 of our tests into a single file which Karma loads and runs in the browser. The
 npm packages needed for this are:
 
@@ -25,8 +25,8 @@ npm packages needed for this are:
 - karma-webpack
 - jasmine
 - webpack
-- core-js (for ES5 shims)
-- babel-loader (for ES6 to ES5 transpilation)
+- core-js (optional, for ES5 shims for PhantomJS)
+- babel-loader (optional, for ES6 to ES5 transpilation)
 
 The Karma configuration file, `karma.conf.js` may look something like this:
 
