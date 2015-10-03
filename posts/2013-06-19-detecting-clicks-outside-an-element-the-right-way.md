@@ -43,7 +43,7 @@ depictions of event bubbling and event capturing.
 
 Adding an event handler that gets called in the event capturing case requires
 plain ol' javascript. JQuery does not provide a way to do this, probably because
-IE8 and below does not support event capturing. The code looks something like
+IE8 and below do not support event capturing. The code looks something like
 this:
 
 ```javascript
