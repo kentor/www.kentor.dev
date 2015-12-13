@@ -9,7 +9,7 @@ export default function render(path, props) {
       const html = React.renderToStaticMarkup(
         <Handler {...props} {...state} />
       );
-      resolve('<!DOCTYPE html>' + html);
+      resolve(`<!DOCTYPE html>${html}`);
     });
   });
 }

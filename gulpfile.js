@@ -32,7 +32,7 @@ gulp.task('generate', [
   pw.setState({
     paths: paths(),
     props: props(),
-    renderer: renderer,
+    renderer,
   }).once('write', done);
 });
 
@@ -58,7 +58,7 @@ gulp.task('renderer:watch', ['generate'], function() {
     'public/bundle.js',
   ], function() {
     const renderer = reload('./public/bundle');
-    pw.setState({ renderer: renderer });
+    pw.setState({ renderer });
   });
 });
 
@@ -139,10 +139,9 @@ gulp.task('js:watch', function() {
 
 gulp.task('js:build', function() {
   return browserify('./src/js/index.js', {
-      bundleExternal: false,
-      standalone: 'render',
-    })
-    .bundle()
+    bundleExternal: false,
+    standalone: 'render',
+  }).bundle()
     .on('error', gutil.log.bind(gutil))
     .pipe(source('bundle.js'))
     .pipe(gulp.dest('public/'));
