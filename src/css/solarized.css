@@ -18,3 +18,12 @@
   --solarized-violet: #6c71c4;
   --solarized-yellow: #b58900;
 }
+
+.blue { color: var(--solarized-blue) }
+.cyan { color: var(--solarized-cyan) }
+.green { color: var(--solarized-green) }
+.magenta { color: var(--solarized-magenta) }
+.orange { color: var(--solarized-orange) }
+.red { color: var(--solarized-red) }
+.violet { color: var(--solarized-violet) }
+.yellow { color: var(--solarized-yellow) }

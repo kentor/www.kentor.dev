@@ -1,66 +1,10 @@
-const assign = require('object-assign');
-const autoprefixer = require('autoprefixer-core');
-const browserify = require('browserify');
 const cssnano = require('cssnano');
-const cssnext = require('cssnext');
-const del = require('del');
-const eslint = require('eslint');
-const ghpages = require('gh-pages');
+const cssnext = require('postcss-cssnext');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
-const liveServer = require('live-server');
-const PagesWriter = require('./lib/PagesWriter');
-const path = require('path');
-const paths = require('./lib/paths');
 const postcss = require('gulp-postcss');
 const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
-const postcssNested = require('postcss-nested');
-const props = require('./lib/props');
-const reload = require('require-reload')(require);
-const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
-const watchify = require('watchify');
-
-var pw;
-
-gulp.task('generate', [
-  process.env.NODE_ENV === 'production' ? 'js:build' : 'js:watch',
-], function(done) {
-  const renderer = reload('./public/bundle');
-  pw = new PagesWriter();
-  pw.setState({
-    paths: paths(),
-    props: props(),
-    renderer,
-  }).once('write', done);
-});
-
-gulp.task('paths:watch', ['generate'], function() {
-  gulp.watch([
-    'paths.js',
-    'posts/**/*',
-  ], function() {
-    pw.setState({ paths: paths() });
-  });
-});
-
-gulp.task('props:watch', ['generate'], function() {
-  gulp.watch([
-    'posts/**/*',
-  ], function() {
-    pw.setState({ props: props() });
-  });
-});
-
-gulp.task('renderer:watch', ['generate'], function() {
-  gulp.watch([
-    'public/bundle.js',
-  ], function() {
-    const renderer = reload('./public/bundle');
-    pw.setState({ renderer });
-  });
-});
 
 gulp.task('assets', function() {
   return gulp.src([
@@ -71,21 +15,9 @@ gulp.task('assets', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('build', [
-  'assets',
-  'css:build',
-  'generate',
-]);
-
-gulp.task('clean', function(done) {
-  del('public', done);
-});
-
 const processors = [
   postcssImport,
-  postcssNested,
   cssnext(),
-  autoprefixer,
   postcssAssets({
     basePath: 'src/',
     loadPaths: ['images/'],
@@ -105,87 +37,25 @@ gulp.task('css:watch', ['css'], function() {
 });
 
 gulp.task('css:build', function() {
+  const buildProcessors = processors.concat([
+    cssnano({
+      discardComments: {
+        removeAll: true,
+      },
+    }),
+  ]);
+
   return gulp.src('src/css/app.css')
-    .pipe(postcss(processors.concat(cssnano)))
+    .pipe(postcss(buildProcessors))
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('deploy', ['build'], function(done) {
-  ghpages.publish(path.join(__dirname, 'public'), {
-    branch: 'master',
-  }, done);
-});
-
-gulp.task('js:watch', function() {
-  const b = browserify('./src/js/index.js', assign(watchify.args, {
-    bundleExternal: false,
-    standalone: 'render',
-  }));
-  const watcher = watchify(b);
-
-  watcher.on('update', rebundle);
-  watcher.on('log', gutil.log);
-
-  function rebundle() {
-    return watcher
-      .bundle()
-      .on('error', gutil.log.bind(gutil))
-      .pipe(source('bundle.js'))
-      .pipe(gulp.dest('public/'));
-  }
-
-  return rebundle();
-});
-
-gulp.task('js:build', function() {
-  return browserify('./src/js/index.js', {
-    bundleExternal: false,
-    standalone: 'render',
-  }).bundle()
-    .on('error', gutil.log.bind(gutil))
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest('public/'));
-});
-
-const cli = new eslint.CLIEngine({
-  extensions: ['.js', '.jsx'],
-});
-const formatter = cli.getFormatter();
-gulp.task('lint', function(done) {
-  const report = cli.executeOnFiles(['.']);
-  console.log(formatter(report.results));
-  done();
-});
-
-gulp.task('lint:watch', ['lint'], function() {
-  gulp.watch([
-    '*.js',
-    '.eslintrc',
-    'lib/**/*',
-    'src/js/**/*',
-  ], ['lint']);
-});
-
-function server() {
-  liveServer.start({
-    port: 4069,
-    root: 'public',
-    wait: 16,
-  });
-}
-
-gulp.task('server', function() {
-  server();
-});
+gulp.task('build', [
+  'assets',
+  'css:build',
+]);
 
 gulp.task('watch', [
   'assets',
   'css:watch',
-  'generate',
-  'lint:watch',
-  'paths:watch',
-  'props:watch',
-  'renderer:watch',
-], function() {
-  server();
-});
+]);

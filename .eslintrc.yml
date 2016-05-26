@@ -1,2 +1,4 @@
 ---
-extends: kentor
+extends:
+  - kentor
+  - kentor/es6

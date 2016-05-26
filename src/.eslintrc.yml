@@ -1,5 +1,0 @@
----
-extends:
-  - kentor/browser
-  - kentor/es6
-  - kentor/react

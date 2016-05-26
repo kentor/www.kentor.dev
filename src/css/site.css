@@ -1,0 +1,73 @@
+:root {
+  --monospace-font: consolas, monospace;
+  --sans-serif-font: Avenir Next, Avenir, Segoe UI, sans-serif;
+  --serif-font: Vollkorn, Book Antiqua, Georgia, sans-serif;
+}
+
+body {
+  background: var(--solarized-base3);
+  color: var(--solarized-base01);
+  font-family: var(--sans-serif-font);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--solarized-base00)30;
+  margin: 0;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.serif {
+  font-family: var(--serif-font);
+}
+
+.logo {
+  background: inline('ness.gif');
+  display: inline-block;
+  height: height('ness.gif');
+  width: width('ness.gif');
+}
+
+/* from marky-markdown */
+.deep-link {
+  font-weight: 500;
+}
+
+.deep-link a {
+  text-decoration: none;
+}
+
+.PostContent img {
+  max-width: 100%;
+}
+
+.PostContent > p > code {
+  color: var(--solarized-magenta);
+  font-size: 0.875em;
+  word-break: break-word;
+}
+
+.editor {
+  font-size: .875rem;
+  margin: 0;
+  overflow: auto;
+  padding: .875rem;
+  text-align: left;
+}
+
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px) {
+  :root {
+    font-size: 12.8px;
+  }
+}
+
+@media only screen and (max-resolution: 1dppx) {
+  body {
+    color: var(--solarized-base00);
+  }
+}
