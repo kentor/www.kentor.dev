@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "lint:watch": "esw -w",
     "start": "npm-run-all clean --parallel assets:watch html:watch lint:watch webserver",
-    "webserver": "live-server public --no-browser"
+    "webserver": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open"
   },
   "author": "Kenneth Chung",
   "homepage": "http://kentor.me/",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "babel-preset-react": "6.5.0",
     "babel-register": "6.9.0",
+    "browser-sync": "2.12.10",
     "classnames": "2.2.5",
     "colors": "1.1.2",
     "cssnano": "3.6.2",
@@ -42,7 +43,6 @@
     "gulp-postcss": "6.1.1",
     "gulp-sourcemaps": "1.6.0",
     "immutable": "3.8.1",
-    "live-server": "1.0.0",
     "marky-markdown": "7.0.0",
     "moment": "2.13.0",
     "npm-run-all": "2.1.1",
