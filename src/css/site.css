@@ -44,7 +44,7 @@ hr {
   max-width: 100%;
 }
 
-.PostContent > p > code {
+.PostContent code {
   color: var(--solarized-magenta);
   font-size: 0.875em;
   word-break: break-word;
