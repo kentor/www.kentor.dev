@@ -1,14 +1,14 @@
 ---
 title: Generating pastel colors for css
 ---
-I was using David Merfield's [randomColor][r] library to generate pastel colors
+I was using David Merfield’s [randomColor][r] library to generate pastel colors
 with the call `randomColor({ luminosity: 'light' })`. The colors generated
-weren't pastel enough for my taste; some of them were too intense, so I wanted
+weren’t pastel enough for my taste; some of them were too intense, so I wanted
 to figure out what exactly is it about pastels that gives us that characteristic
 soft and soothing feeling, and how I would generate such colors.
 
-The first stop is obviously Wikipedia's article on [Pastel (color)][p]. It's
-very informative right off the bat:
+The first stop is Wikipedia’s article on [Pastel (color)][p]. It’s very
+informative right off the bat:
 
 > Pastels or pastel colors are the family of colors which, when described in the
 > HSV color space, have high value and low to intermediate saturation.
@@ -18,7 +18,7 @@ consult Wikipedia with their article on [HSL and HSV][h]. The cylindrical graph
 of the HSV color space is enough to give you an intuitive sense of why a high
 value and a low to intermediate saturation would afford a pastel color.
 
-Awesome, well why don't we just set S = 25% and V = 100% and then randomly pick
+Awesome, well why don’t we just set S = 25% and V = 100% and then randomly pick
 an H value between 0° and 360° to generate a random pastel. My first idea was to
 generate this HSV triplet and then convert it to RGB for CSS to understand.
 While this works, it requires a nontrivial algorithm. It turns out CSS supports

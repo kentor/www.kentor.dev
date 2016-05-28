@@ -5,9 +5,9 @@ At my current employer, Rescale, we were using the [Jest][j] framework by
 Facebook to test our React and Flux application. Jest is a simple-to-get-started
 testing framework with an API similar to that of [Jasmine][ja], but with
 automatic mocking of CommonJS modules baked in. However, like many developers
-have [noted][n], we've found Jest to be unbearably slow when running a
+have [noted][n], we’ve found Jest to be unbearably slow when running a
 non-trivial test suite. For our test suite of about 60 test cases, it takes well
-over 10 seconds to finish! This article explains how we've ditched Jest in favor
+over 10 seconds to finish! This article explains how we’ve ditched Jest in favor
 of [Karma][k], [Webpack][w], and [Jasmine][ja]. The same test suite running
 under our new setup takes only a little under 200ms to execute in PhantomJS,
 after the initial Webpack bundling.
@@ -70,7 +70,7 @@ var context = require.context('./src/js', true, /-test\.js$/);
 context.keys().forEach(context);
 ```
 
-And here's a sample test, located at
+And here’s a sample test, located at
 `./src/js/components/__tests__/MemberList-test.js` which tests the component
 `./src/js/components/MemberList.jsx`:
 
@@ -87,7 +87,7 @@ describe('MemberList', () => {
 });
 ```
 
-That's all well and good for testing React components, but testing Flux
+That’s all well and good for testing React components, but testing Flux
 applications, specifically Flux Stores, requires a little more setup.
 
 ### Testing Flux Stores
@@ -125,8 +125,8 @@ beforeEach(() => {
 });
 ```
 
-That's all there is to busting the `require` cache. Now modules are cached
-within each test case, but aren't in between. Stores, actions, and dispatchers
+That’s all there is to busting the `require` cache. Now modules are cached
+within each test case, but aren’t in between. Stores, actions, and dispatchers
 are all isolated between tests.
 
 ### Testing the Actions/Stores Boundary
@@ -162,7 +162,7 @@ describe('MemberStore', () => {
 });
 ```
 
-### Mocking a Module's Dependencies
+### Mocking a Module’s Dependencies
 
 Say we want to test a module that has a dependency on another module that we
 want to mock. One example could be that we want to test an api module that
@@ -194,7 +194,7 @@ API.__set__('axios', mockAxios);
 
 Now `API.doSomething()` will call the mocked axios' `get()`.
 
-Another option is to, once again, manipulate Webpack's `require` cache:
+Another option is to, once again, manipulate Webpack’s `require` cache:
 
 ```javascript
 require('axios'); // Make sure the module is loaded and cached
@@ -212,8 +212,8 @@ you should use something like [jasmine-ajax][jx].
 We saw around a 50x speed improvment in the execution of our React and Flux
 application test suite using Karma and Webpack over Jest. However, it does take
 a bit more knowledge and effor to set up compared to Jest, and mocking a
-module's dependencies isn't as easy. Jest is really nice since it's easy to set
-up, but that it's so slow is a deal breaker for us, and we dont know if it'll
+module’s dependencies isn’t as easy. Jest is really nice since it’s easy to set
+up, but that it’s so slow is a deal breaker for us, and we dont know if it’ll
 ever be fixed. In the mean time, our current setup allows us to effectively TDD.
 
 **Edit:** Sample repository demonstrating this technique,

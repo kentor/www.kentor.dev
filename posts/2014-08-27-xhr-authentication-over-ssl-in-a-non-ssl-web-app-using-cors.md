@@ -4,12 +4,12 @@ title: XHR authentication over SSL from a non SSL origin using CORS
 You have a single page web app &mdash; built with Ember or whatever is hot these
 days &mdash; served over regular http but want your users to authenticate over
 https. You try an ajax post request to the authentication endpoint but is
-rejected by the browser's same-origin policy. A good way to get around this is
+rejected by the browser’s same-origin policy. A good way to get around this is
 by specifying the Cross-origin Resource Sharing (CORS) headers in the response
 of your auth endpoint. They will tell the browser to allow such a cross-origin
 request.
 
-Let's say your web app is hosted on `http://example.com` and you want to perform
+Let’s say your web app is hosted on `http://example.com` and you want to perform
 an ajax post to `https://example.com/auth`. The authentication endpoint has to
 specify that `http://example.com` is allowed to make that request by setting the
 value of the `Access-Control-Allow-Origin` header to either `http://example.com`
