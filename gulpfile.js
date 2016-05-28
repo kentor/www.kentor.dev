@@ -17,7 +17,9 @@ gulp.task('assets', function() {
 
 const processors = [
   postcssImport,
-  cssnext(),
+  cssnext({
+    browsers: ['last 1 version'],
+  }),
   postcssAssets({
     basePath: 'src/',
     loadPaths: ['images/'],
