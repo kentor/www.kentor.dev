@@ -1,7 +1,7 @@
 :root {
   --monospace-font: consolas, monospace;
-  --sans-serif-font: Avenir Next, Avenir, Segoe UI, sans-serif;
-  --serif-font: Vollkorn, Book Antiqua, Georgia, sans-serif;
+  --sans-serif-font: Avenir Next, Avenir, Segoe UI, Helvetica Neue, sans-serif;
+  --serif-font: Vollkorn, Georgia, sans-serif;
 }
 
 body {
@@ -26,7 +26,7 @@ hr {
 
 .logo {
   background: inline('ness.gif');
-  display: inline-block;
+  display: block;
   height: height('ness.gif');
   width: width('ness.gif');
 }
