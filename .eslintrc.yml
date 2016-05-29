@@ -2,3 +2,4 @@
 extends:
   - kentor
   - kentor/es6
+  - kentor/react
