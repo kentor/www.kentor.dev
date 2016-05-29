@@ -55,12 +55,9 @@ hr {
   margin: 0;
   overflow: auto;
   padding: .875rem;
-  text-align: left;
 }
 
-@media only screen
-and (min-device-width: 320px)
-and (max-device-width: 568px) {
+@media only screen and (max-width: 568px) {
   :root {
     font-size: 12.8px;
   }
