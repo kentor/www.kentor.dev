@@ -14,7 +14,7 @@
     "html:watch": "node .",
     "lint": "eslint .",
     "lint:watch": "esw -w",
-    "start": "npm-run-all clean --parallel assets:watch html:watch lint:watch webserver",
+    "start": "npm-run-all clean html:build --parallel assets:watch html:watch lint:watch webserver",
     "webserver": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open"
   },
   "author": "Kenneth Chung",
