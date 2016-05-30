@@ -15,3 +15,7 @@ code,
 pre {
   font-family: var(--monospace-font);
 }
+
+ol {
+  padding-left: 2.5rem;
+}
