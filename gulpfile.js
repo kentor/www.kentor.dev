@@ -1,10 +1,11 @@
-const cssnano = require('cssnano');
+const cssnano = require('gulp-cssnano');
 const cssnext = require('postcss-cssnext');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
 const sourcemaps = require('gulp-sourcemaps');
+const uncss = require('gulp-uncss');
 
 gulp.task('assets', function() {
   return gulp.src([
@@ -39,16 +40,16 @@ gulp.task('css:watch', ['css'], function() {
 });
 
 gulp.task('css:build', function() {
-  const buildProcessors = processors.concat([
-    cssnano({
+  return gulp.src('src/css/app.css')
+    .pipe(postcss(processors))
+    .pipe(uncss({
+      html: ['public/**/*.html'],
+    }))
+    .pipe(cssnano({
       discardComments: {
         removeAll: true,
-      },
-    }),
-  ]);
-
-  return gulp.src('src/css/app.css')
-    .pipe(postcss(buildProcessors))
+      }
+    }))
     .pipe(gulp.dest('public'));
 });
 
