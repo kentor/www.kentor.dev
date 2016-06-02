@@ -21,9 +21,11 @@ Node.js modules. At a high level, the system works like this:
 
 1. The entry script watches the current working directory via
    `fs.watch(process.cwd(), { recursive: true }, (event, filename) => { ... });`
+
 2. The callback to `fs.watch()` clears local modules from the `require.cache` so
    that subsequent calls to `require()` will load the new implementation of the
    required module.
+
 3. The callback then calls `require('./handler')` which is a module that exports
    a function, and the handler is passed the `event` and `filename` arguments.
 
