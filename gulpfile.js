@@ -22,8 +22,7 @@ const processors = [
     browsers: ['last 1 version'],
   }),
   postcssAssets({
-    basePath: 'src/',
-    loadPaths: ['images/'],
+    loadPaths: ['src'],
   }),
 ];
 

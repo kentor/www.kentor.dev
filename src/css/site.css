@@ -25,10 +25,10 @@ hr {
 }
 
 .logo {
-  background: inline('ness.gif');
+  background: inline('images/ness.gif');
   display: block;
-  height: height('ness.gif');
-  width: width('ness.gif');
+  height: height('images/ness.gif');
+  width: width('images/ness.gif');
 }
 
 /* from marky-markdown */
