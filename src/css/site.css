@@ -16,6 +16,10 @@ hr {
   margin: 0;
 }
 
+.justify {
+  text-align: justify;
+}
+
 .lh-copy {
   line-height: 1.75;
 }
