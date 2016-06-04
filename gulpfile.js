@@ -47,7 +47,7 @@ gulp.task('css:build', function() {
     .pipe(cssnano({
       discardComments: {
         removeAll: true,
-      }
+      },
     }))
     .pipe(gulp.dest('public'));
 });
