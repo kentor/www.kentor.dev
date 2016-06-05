@@ -6,11 +6,6 @@ a {
   color: inherit;
 }
 
-b,
-strong {
-  font-weight: 500;
-}
-
 code,
 pre {
   font-family: var(--monospace-font);
