@@ -8,7 +8,7 @@
     "assets:watch": "gulp watch",
     "build": "npm-run-all html:build assets:build",
     "clean": "rimraf public && mkdir -p public",
-    "deploy": "npm-run-all clean build deploy-public",
+    "deploy": "NODE_ENV=production npm-run-all clean build deploy-public",
     "deploy-public": "node lib/deploy.js",
     "html:build": "node lib/build.js",
     "html:watch": "node .",
