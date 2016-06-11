@@ -6,8 +6,8 @@ for file changes, and have it call a function with the updated file’s filename
 as an argument. Now imagine changing the implementation of that function and
 have new file changes execute the new version without exiting the Node.js
 process. Furthermore, imagine modules that were imported via `require()` were
-reloaded when their implementation changes, so that when the function executes
-again, it runs the new version of your modules.
+reloaded when they're updated, so that when the function executes again, it runs
+the new version of the modules.
 
 I wanted a system like that when I was thinking about how I would write the
 static site generator for this very blog. I wanted it so that whenever I saved a
@@ -158,7 +158,7 @@ I've uploaded a boilerplate for the code explained in this article to
 
 Be creative with what you can do with such a system, and let me know what you
 come up with! Like I said, I’m using it as a static site generator with React
-and live reloading, and I’ll show how I do it in my next post.
+and live reloading, and it's been working pretty well.
 
 [d]: https://www.npmjs.com/package/dependency-graph
 [f]: http://fredkschott.com/post/2014/06/require-and-the-module-system/
