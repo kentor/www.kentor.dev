@@ -12,7 +12,7 @@ Here's an example of the diagram we created with this technique. The controls
 are just to show that React can rerender the diagram when state changes.
 
 <p align="center">
-  <img src="http://i.imgur.com/BbGuHsj.gif" alt="Diagram" />
+  <img src="https://i.imgur.com/BbGuHsj.gif" alt="Diagram" />
 </p>
 
 SVG is a good choice for creating diagrams within React because it's just part
@@ -83,7 +83,7 @@ The wireframe of the diagram in HTML looks like this:
 This produces:
 
 <p align="center">
-  <img src="http://i.imgur.com/JvRDq5B.png" alt="Wireframe" />
+  <img src="https://i.imgur.com/JvRDq5B.png" alt="Wireframe" />
 </p>
 
 Borders were added to each `div` just to show their boundaries. A couple of
