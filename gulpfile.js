@@ -9,7 +9,6 @@ const uncss = require('gulp-uncss');
 
 gulp.task('assets', function() {
   return gulp.src([
-    'src/CNAME',
     'src/images/**/*',
   ], { base: 'src' })
     .pipe(gulp.dest('public'));
