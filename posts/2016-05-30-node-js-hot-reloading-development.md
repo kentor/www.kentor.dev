@@ -1,23 +1,23 @@
 ---
 title: Node.js hot module reloading development
 ---
-Imagine launching a Node.js process that watches the current working directory
-for file changes, and have it call a function with the updated file’s filename
-as an argument. Now imagine changing the implementation of that function and
-have new file changes execute the new version without exiting the Node.js
-process. Furthermore, imagine modules that were imported via `require()` were
-reloaded when they're updated, so that when the function executes again, it runs
-the new version of the modules.
+Imagine running a Node.js process that watches the current working directory for
+file changes, and have it pass the filename of any updated files to a callback.
+Now imagine changing the implementation of that callback and have subsequent
+file updates execute the new callback without exiting the Node.js process.
+Furthermore, imagine calls to `require()` always load the newest version of the
+required module (usually they’re cached), so that when the callback executes
+again, it has the newest version of the modules.
 
 I wanted a system like that when I was thinking about how I would write the
 static site generator for this very blog. I wanted it so that whenever I saved a
 markdown file in a specific directory, it would run a function to convert the
 markdown into HTML and write it out to disk. And since I’ll be using React, I
-wanted it so that whenever I update a layout component the system would rebuild
+wanted it so that whenever I update a layout component, the system would rebuild
 the entire site.
 
-It’s actually pretty easy to implement such a system with only the built-in
-Node.js modules. At a high level, the system works like this:
+It’s actually pretty easy to implement such a system with only the Node.js APIs.
+At a high level, the system works like this:
 
 1. The entry script watches the current working directory via
    `fs.watch(process.cwd(), { recursive: true }, (event, filename) => { ... });`
@@ -28,6 +28,8 @@ Node.js modules. At a high level, the system works like this:
 
 3. The callback then calls `require('./handler')` which is a module that exports
    a function, and the handler is passed the `event` and `filename` arguments.
+   Since we’ve cleared the `require` cache, the `./handler` module is hot
+   swapped with the new version.
 
 In otherwords, we have a directory with `index.js` and `handler.js`:
 
