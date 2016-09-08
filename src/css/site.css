@@ -32,11 +32,11 @@ hr {
   font-family: var(--serif-font);
 }
 
-.logo {
-  background: inline('images/ness.gif');
+.logo,
+.logo svg {
   display: block;
-  height: height('images/ness.gif');
-  width: width('images/ness.gif');
+  height: 48px;
+  width: 32px;
 }
 
 /* from marky-markdown */
