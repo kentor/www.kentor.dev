@@ -6,7 +6,7 @@
   "scripts": {
     "assets:build": "gulp build",
     "assets:watch": "gulp watch",
-    "build": "npm-run-all html:build assets:build",
+    "build": "npm-run-all html:build assets:build html:build",
     "clean": "rimraf public && mkdir -p public",
     "html:build": "node lib/build.js",
     "html:watch": "node .",
@@ -39,6 +39,7 @@
     "gulp": "3.9.1",
     "gulp-cssnano": "2.1.2",
     "gulp-postcss": "6.1.1",
+    "gulp-rev": "7.1.2",
     "gulp-sourcemaps": "1.6.0",
     "gulp-uncss": "1.0.6",
     "immutable": "3.8.1",

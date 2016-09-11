@@ -4,6 +4,7 @@ const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
+const rev = require('gulp-rev');
 const sourcemaps = require('gulp-sourcemaps');
 const uncss = require('gulp-uncss');
 
@@ -47,7 +48,12 @@ gulp.task('css:build', function() {
         removeAll: true,
       },
     }))
-    .pipe(gulp.dest('public'));
+    .pipe(gulp.dest('public'))
+    .pipe(rev())
+    .pipe(gulp.dest('public'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('public'))
+    ;
 });
 
 gulp.task('build', [
