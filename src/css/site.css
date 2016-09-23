@@ -39,18 +39,6 @@ hr {
   width: 32px;
 }
 
-.logo svg:last-child {
-  display: none;
-}
-
-.logo:hover svg:first-child {
-  display: none;
-}
-
-.logo:hover svg:last-child {
-  display: block;
-}
-
 /* from marky-markdown */
 .deep-link {
   font-weight: 600;
