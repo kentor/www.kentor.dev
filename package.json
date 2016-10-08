@@ -8,8 +8,8 @@
     "assets:watch": "gulp watch",
     "build": "npm-run-all html:build assets:build html:build",
     "clean": "rimraf public && mkdir -p public",
-    "html:build": "node lib/build.js",
-    "html:watch": "node .",
+    "html:build": "babel-node lib/build.js",
+    "html:watch": "babel-node .",
     "lint": "eslint .",
     "lint:watch": "esw -w",
     "start": "npm-run-all clean html:build --parallel assets:watch html:watch lint:watch webserver",
@@ -22,8 +22,8 @@
     "url": "https://github.com/kentor/kentor.github.io.git"
   },
   "devDependencies": {
+    "babel-cli": "6.16.0",
     "babel-preset-react": "6.11.1",
-    "babel-register": "6.14.0",
     "browser-sync": "2.16.0",
     "classnames": "2.2.5",
     "colors": "1.1.2",
