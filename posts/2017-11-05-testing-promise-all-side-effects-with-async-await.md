@@ -85,9 +85,9 @@ it('sets finished to true after all promises have resolved', () => {
 ```
 
 To understand why, we need to understand that promise callbacks, when ready, are
-queued in the microtask queue (using `process.nextTick` in Node.js). For an
-in-depth coverage of microtasks, I recommend reading Jake Archibald's article on
-[Tasks, microtasks, queues and schedules][t].
+queued in the microtask queue. For an in-depth coverage of microtasks, I
+recommend reading Jake Archibald's article on [Tasks, microtasks, queues and
+schedules][t].
 
 So let's visualize what's on the microtask queue when we run the test. To make a
 better illustration, let's assume that `Promise.all` is implemented like so:
@@ -173,12 +173,6 @@ it('sets finished to true after all promises have resolved', () => {
 
 Hopefully that illustrates that the extra `await` is needed to flush the
 callback of the `Promise.all` sitting in the microtask queue.
-
-Note that everything mentioned in this article assume that Promise callbacks are
-scheduled with `process.nextTick`, and that `await` flushes the microtask queue.
-Some polyfills of Promises use `setTimeout(fn, 0)` to schedule callbacks
-instead, and that would probably not work with `await`, but that also depends on
-how `await` is implemented.
 
 [d]: https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred
 [j]: https://facebook.github.io/jest/
