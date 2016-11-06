@@ -1,5 +1,5 @@
 ---
-title: Testing Promise.all side effects
+title: Testing Promise.all side effects with async/await
 ---
 
 I had to write a test that asserted some side effect of running the `then`
