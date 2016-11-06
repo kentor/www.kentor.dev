@@ -3,6 +3,7 @@ pages:
   cache:
     paths:
     - $HOME/.yarn-cache
+    - node_modules/
   stage: deploy
   script:
   - npm install -g yarn
