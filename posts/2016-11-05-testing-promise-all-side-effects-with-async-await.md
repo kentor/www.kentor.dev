@@ -5,8 +5,8 @@ title: Testing Promise.all side effects with async/await
 I had to write a test that asserted some side effect of running the `then`
 handler of a [`Promise.all`][p]. I could control the resolution timing of the
 promises passed to `Promise.all` using [`Deferred`][d] objects, but since I
-didn't have control of the `Promise.all` call, I had dig deeper to figure out
-how to write the test case.
+wasn't returning the `Promise.all` call, I had dig deeper to figure out how to
+control the resolution timing of the `Promise.all`.
 
 Here's a minimal test case using [`jest`][j] (note: this would also work with
 [`mocha`][m]) illustrating what I had to deal with:
