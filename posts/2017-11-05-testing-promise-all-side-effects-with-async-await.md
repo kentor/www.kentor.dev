@@ -174,11 +174,11 @@ it('sets finished to true after all promises have resolved', () => {
 Hopefully that illustrates that the extra `await` is needed to flush the
 callback of the `Promise.all` sitting in the microtask queue.
 
-Note that everything mentioned in this article assumes that Promise callbacks
-are scheduled with `process.nextTick`, and that `await` flushes the microtask
-queue. Some browser polyfills of Promises use `setTimeout(fn, 0)` to schedule
-callbacks instead, and that would probably not work with `await`, but that also
-depends on how `await` is implemented.
+Note that everything mentioned in this article assume that Promise callbacks are
+scheduled with `process.nextTick`, and that `await` flushes the microtask queue.
+Some polyfills of Promises use `setTimeout(fn, 0)` to schedule callbacks
+instead, and that would probably not work with `await`, but that also depends on
+how `await` is implemented.
 
 [d]: https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred
 [j]: https://facebook.github.io/jest/
