@@ -2,14 +2,13 @@ image: node:6
 pages:
   cache:
     paths:
-    - node_modules/
+    - $HOME/.yarn-cache
   stage: deploy
   script:
-  - npm install
+  - npm install -g yarn
+  - yarn
   - npm run clean
   - NODE_ENV=production npm run build
   artifacts:
     paths:
     - public
-  only:
-    - master
