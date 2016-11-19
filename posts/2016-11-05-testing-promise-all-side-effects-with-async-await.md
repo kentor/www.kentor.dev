@@ -5,8 +5,8 @@ title: Testing Promise.all side effects with async/await
 I had to write a test that asserted some side effect of running the `then`
 handler of a [`Promise.all`][p]. I could control the resolution timing of the
 promises passed to `Promise.all` using [`Deferred`][d] objects, but since I
-wasn't returning the `Promise.all` call, I had dig deeper to figure out how to
-control the resolution timing of the `Promise.all`.
+wasn't returning the `Promise.all` call, I had to dig deeper to figure out how
+to force the callback of a `Promise.all` to run inside a test.
 
 Here's a minimal test case using [`jest`][j] (note: this would also work with
 [`mocha`][m]) illustrating what I had to deal with:
@@ -53,126 +53,86 @@ describe('run', () => {
 });
 ```
 
-Of course, this won't work because the test is a synchronous. Promise handlers
-would be ran after the test case has run all of its statements. However, we
-could use [`async/await`][ja] in `jest` (and `mocha`) to deal with asynchrony in
-the test with a synchronous api:
+Of course, the test case will fail because the test is a synchronous. Promise
+callbacks would be ran after the test case has run all of its statements. What
+we want is a way to force the promise callbacks to run after calling the
+deferreds' `resolve()` method, and before we call the test's assertions.
+
+To figure out how to proceed, we need to understand how promise callbacks are
+scheduled when they are resolved or rejected. Jake Archibald's article on
+[Tasks, microtasks, queues and schedules][t] goes in depth on exactly that
+topic, and I highly recommend reading it.
+
+In summary: Promise callbacks are queued in the **microtask** queue and
+callbacks of `setImmediate(fn)` and `setTimeout(fn)` are queued in the
+**macrotask** queue. Callbacks sitting on the microtask queue are run right
+after the stack empties out, and if a microtask schedules another microtask,
+then they will continually be pulled off the queue before yielding to the
+macrotask queue.
+
+With this knowledge, we can use `setImmediate()` to force all promise callbacks
+to run by the time it runs its own callback. We also need to use the `done`
+pattern for async tests in jest/mocha. This would make the test pass:
 
 ```js
+it('sets finished to true after all promises have resolved', (done) => {
+  thing.run(deferreds.map(d => d.promise));
+  expect(thing.finished).toBe(false);
+  deferreds[1].resolve();
+  setImmediate(() => {
+    expect(thing.finished).toBe(false);
+    deferreds[0].resolve();
+    setImmediate(() => {
+      expect(thing.finished).toBe(true);
+      done();
+    });
+  });
+});
+```
+
+But this is really ugly because every time we flush the microtask queue by using
+`setImmediate()` we introduce a level of indentation. We can flatten the
+indentation by using promises:
+
+```js
+function flushPromises() {
+  return new Promise(resolve => setImmediate(resolve));
+}
+
+it('sets finished to true after all promises have resolved', (done) => {
+  thing.run(deferreds.map(d => d.promise));
+  expect(thing.finished).toBe(false);
+  deferreds[1].resolve();
+  flushPromises().then(() => {
+    expect(thing.finished).toBe(false);
+    deferreds[0].resolve();
+    return flushPromises();
+  }).then(() => {
+    expect(thing.finished).toBe(true);
+    done();
+  });
+});
+```
+
+Still, this would require at least 1 level of indentation. To remove all levels
+of indentation we could use [`async/await`][ja] in `jest` (and `mocha`)!
+
+```js
+function flushPromises() {
+  return new Promise(resolve => setImmediate(resolve));
+}
+
 it('sets finished to true after all promises have resolved', async () => {
   thing.run(deferreds.map(d => d.promise));
   expect(thing.finished).toBe(false);
-  await deferreds[1].resolve();
+  deferreds[1].resolve();
+  await flushPromises();
   expect(thing.finished).toBe(false);
-  await deferreds[0].resolve();
+  deferreds[0].resolve();
+  await flushPromises();
   expect(thing.finished).toBe(true);
 });
 ```
-
-But if you ran the above, the last assertion would still fail. It turns out
-adding an extra `await <any>` after resolving the last would work:
-
-```js
-it('sets finished to true after all promises have resolved', () => {
-  thing.run(deferreds.map(d => d.promise));
-  expect(thing.finished).toBe(false);
-  await deferreds[1].resolve();
-  expect(thing.finished).toBe(false);
-  await deferreds[0].resolve();
-  await null; // could be anything: await 1, await undefined, etc.
-  expect(thing.finished).toBe(true);
-});
-```
-
-To understand why, we need to understand that promise callbacks, when ready, are
-queued in the microtask queue. For an in-depth coverage of microtasks, I
-recommend reading Jake Archibald's article on [Tasks, microtasks, queues and
-schedules][t].
-
-So let's visualize what's on the microtask queue when we run the test. To make a
-better illustration, let's assume that `Promise.all` is implemented like so:
-
-```js
-Promise.all = (promises) => (
-  new Promise((resolve, reject) => {
-    const results = [];
-    let numResolved = 0;
-
-    function handle(i, r) {
-      results[i] = r;
-      numResolved++;
-      if (numResolved === promises.length) {
-        resolve(results);
-      }
-    }
-
-    promises.forEach((p, i) => {
-      p.then(r => handle(i, r));
-    });
-  })
-);
-```
-
-Then the promise that we're dealing with in the test looks like this:
-
-```js
-new Promise((resolve, reject) => {
-  const results = [];
-  let numResolved = 0;
-
-  function handle(i, r) {
-    results[i] = r;
-    numResolved++;
-    if (numResolved === promises.length) {
-      resolve(results);
-    }
-  }
-
-  deferred[0].promise.then(r => handle(0, r));
-  deferred[1].promise.then(r => handle(1, r));
-}).then(() => {
-  thing.finished = true;
-});
-```
-
-Let's also break up this statement:
-
-```js
-await deferreds[0].resolve();
-```
-
-into
-
-```js
-result = deferred[0].resolve();
-await result;
-```
-
-With this, let's step through the test:
-
-```js
-it('sets finished to true after all promises have resolved', () => {
-  // Microtask queue is currently empty
-  thing.run(deferreds.map(d => d.promise));
-  expect(thing.finished).toBe(false);
-  result = deferreds[1].resolve();
-  // Microtask queue has queued `handle(1, r)` because of resolve()
-  await result;
-  // Microtask queue has been flushed by `await`, ran `handle(1, r)`
-  expect(thing.finished).toBe(false);
-  results = deferreds[0].resolve();
-  // Microtask queue has queued `handle(0, r)`
-  await result;
-  // Microtask queue has been flushed by `await`, ran `handle(0, r)`
-  // Microtask queue has queued `thing.finished = true`
-  await null;
-  // Microtask queue has been flushed by `await`, ran `thing.finished = true`
-  expect(thing.finished).toBe(true);
-});
-```
-
-Hopefully that illustrates that the extra `await` is needed to flush the
-callback of the `Promise.all` sitting in the microtask queue.
 
 [d]: https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred
 [j]: https://facebook.github.io/jest/
