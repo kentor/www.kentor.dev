@@ -35,18 +35,22 @@ class Thing {
 
 describe('run', () => {
   let deferreds;
+  let promises;
   let thing;
 
   beforeEach(() => {
     deferreds = [new Deferred(), new Deferred()];
+    promises = deferreds.map(d => d.promise);
     thing = new Thing();
   });
 
   it('sets finished to true after all promises have resolved', () => {
-    thing.run(deferreds.map(d => d.promise));
+    thing.run(promises);
     expect(thing.finished).toBe(false);
+
     deferreds[1].resolve();
     expect(thing.finished).toBe(false);
+
     deferreds[0].resolve();
     expect(thing.finished).toBe(true);
   });
@@ -76,11 +80,13 @@ pattern for async tests in jest/mocha. This would make the test pass:
 
 ```js
 it('sets finished to true after all promises have resolved', (done) => {
-  thing.run(deferreds.map(d => d.promise));
+  thing.run(promises);
   expect(thing.finished).toBe(false);
+
   deferreds[1].resolve();
   setImmediate(() => {
     expect(thing.finished).toBe(false);
+
     deferreds[0].resolve();
     setImmediate(() => {
       expect(thing.finished).toBe(true);
@@ -100,11 +106,13 @@ function flushPromises() {
 }
 
 it('sets finished to true after all promises have resolved', (done) => {
-  thing.run(deferreds.map(d => d.promise));
+  thing.run(promises);
   expect(thing.finished).toBe(false);
+
   deferreds[1].resolve();
   flushPromises().then(() => {
     expect(thing.finished).toBe(false);
+
     deferreds[0].resolve();
     return flushPromises();
   }).then(() => {
@@ -123,11 +131,13 @@ function flushPromises() {
 }
 
 it('sets finished to true after all promises have resolved', async () => {
-  thing.run(deferreds.map(d => d.promise));
+  thing.run(promises);
   expect(thing.finished).toBe(false);
+
   deferreds[1].resolve();
   await flushPromises();
   expect(thing.finished).toBe(false);
+
   deferreds[0].resolve();
   await flushPromises();
   expect(thing.finished).toBe(true);
