@@ -6,7 +6,7 @@ I had to write a test that asserted some side effect of running the `then`
 handler of a [`Promise.all`][p]. I could control the resolution timing of the
 promises passed to `Promise.all` using [`Deferred`][d] objects, but since I
 wasn't returning the `Promise.all` call, I had to dig deeper to figure out how
-to force the callback of a `Promise.all` to run inside a test.
+to force the callback of the `Promise.all` to run inside a test.
 
 Here's a minimal test case using [`jest`][j] (note: this would also work with
 [`mocha`][m]) illustrating what I had to deal with:
@@ -21,12 +21,9 @@ class Deferred {
   }
 }
 
-class Thing {
-  constructor() {
+class PromisesFinishedIndicator {
+  constructor(promises) {
     this.finished = false;
-  }
-
-  run(promises) {
     Promise.all(promises).then(() => {
       this.finished = true;
     });
@@ -36,23 +33,22 @@ class Thing {
 describe('run', () => {
   let deferreds;
   let promises;
-  let thing;
+  let indicator;
 
   beforeEach(() => {
     deferreds = [new Deferred(), new Deferred()];
     promises = deferreds.map(d => d.promise);
-    thing = new Thing();
+    indicator = new PromisesFinishedIndicator(promises);
   });
 
   it('sets finished to true after all promises have resolved', () => {
-    thing.run(promises);
-    expect(thing.finished).toBe(false);
+    expect(indicator.finished).toBe(false);
 
     deferreds[1].resolve();
-    expect(thing.finished).toBe(false);
+    expect(indicator.finished).toBe(false);
 
     deferreds[0].resolve();
-    expect(thing.finished).toBe(true);
+    expect(indicator.finished).toBe(true);
   });
 });
 ```
@@ -80,16 +76,15 @@ pattern for async tests in jest/mocha. This would make the test pass:
 
 ```js
 it('sets finished to true after all promises have resolved', (done) => {
-  thing.run(promises);
-  expect(thing.finished).toBe(false);
+  expect(indicator.finished).toBe(false);
 
   deferreds[1].resolve();
   setImmediate(() => {
-    expect(thing.finished).toBe(false);
+    expect(indicator.finished).toBe(false);
 
     deferreds[0].resolve();
     setImmediate(() => {
-      expect(thing.finished).toBe(true);
+      expect(indicator.finished).toBe(true);
       done();
     });
   });
@@ -106,17 +101,16 @@ function flushPromises() {
 }
 
 it('sets finished to true after all promises have resolved', (done) => {
-  thing.run(promises);
-  expect(thing.finished).toBe(false);
+  expect(indicator.finished).toBe(false);
 
   deferreds[1].resolve();
   flushPromises().then(() => {
-    expect(thing.finished).toBe(false);
+    expect(indicator.finished).toBe(false);
 
     deferreds[0].resolve();
     return flushPromises();
   }).then(() => {
-    expect(thing.finished).toBe(true);
+    expect(indicator.finished).toBe(true);
     done();
   });
 });
@@ -132,15 +126,15 @@ function flushPromises() {
 
 it('sets finished to true after all promises have resolved', async () => {
   thing.run(promises);
-  expect(thing.finished).toBe(false);
+  expect(indicator.finished).toBe(false);
 
   deferreds[1].resolve();
   await flushPromises();
-  expect(thing.finished).toBe(false);
+  expect(indicator.finished).toBe(false);
 
   deferreds[0].resolve();
   await flushPromises();
-  expect(thing.finished).toBe(true);
+  expect(indicator.finished).toBe(true);
 });
 ```
 
