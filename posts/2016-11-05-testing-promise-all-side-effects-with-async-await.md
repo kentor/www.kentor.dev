@@ -1,15 +1,37 @@
 ---
-title: Testing Promise.all side effects with async/await
+title: Testing Promise Side Effects with Async/Await
 ---
 
-I had to write a test that asserted some side effect of running the `then`
-handler of a [`Promise.all`][p]. I could control the resolution timing of the
-promises passed to `Promise.all` using [`Deferred`][d] objects, but since I
-wasn't returning the `Promise.all` call, I had to dig deeper to figure out how
-to force the callback of the `Promise.all` to run inside a test.
+You might have run into situations where you're calling asynchronous code inside
+of a callback of some framework, and you need to test their side effects. For
+example, you might be making API calls inside of a React component's
+`componentDidMount()` callback that will in turn call `setState()` when the
+request has completed, and you want to assert that the component is in a certain
+state. This article shows techniques for testing these types of scenarios.
 
-Here's a minimal test case using [`jest`][j] (note: this would also work with
-[`mocha`][m]) illustrating what I had to deal with:
+Take a simplified example. We have a class called
+`PromisesHaveFinishedIndicator`. The constructor takes in a list of promises.
+When all of the promises have resolved, the instance's `finished` property is
+set to `true`:
+
+```js
+class PromisesHaveFinishedIndicator {
+  constructor(promises) {
+    this.finished = false;
+
+    Promise.all(promises).then(() => {
+      this.finished = true;
+    });
+  }
+}
+```
+
+A good test case would involve calling the constructor with multiple promises
+whose resolution timing we can control, and writing expectations of the value of
+`this.finished` as each promise is resolved.
+
+In order to control resolution timings of promises in tests, we use `Deferred`
+objects which expose the `resolve` and `reject` methods:
 
 ```js
 class Deferred {
@@ -20,70 +42,55 @@ class Deferred {
     });
   }
 }
+```
 
-class PromisesFinishedIndicator {
-  constructor(promises) {
-    this.finished = false;
-    Promise.all(promises).then(() => {
-      this.finished = true;
-    });
-  }
-}
+With this, we can set up a test for `PromisesHaveFinishedIndicator`. We use the
+[Jest][j] testing framework in this example, but the technique can be applied to
+other testing frameworks as well:
 
-describe('run', () => {
-  let deferreds;
-  let promises;
-  let indicator;
+```js
+test('sets finished to true after all promises have resolved', () => {
+  const d1 = new Deferred();
+  const d2 = new Deferred();
 
-  beforeEach(() => {
-    deferreds = [new Deferred(), new Deferred()];
-    promises = deferreds.map(d => d.promise);
-    indicator = new PromisesFinishedIndicator(promises);
-  });
+  const indicator = new PromisesHaveFinishedIndicator([d1.promise, d2.promise]);
 
-  it('sets finished to true after all promises have resolved', () => {
-    expect(indicator.finished).toBe(false);
+  expect(indicator.finished).toBe(false);
 
-    deferreds[1].resolve();
-    expect(indicator.finished).toBe(false);
+  d2.resolve();
+  expect(indicator.finished).toBe(false);
 
-    deferreds[0].resolve();
-    expect(indicator.finished).toBe(true);
-  });
+  d1.resolve();
+  expect(indicator.finished).toBe(true);
 });
 ```
 
-Of course, the test case will fail because the test is a synchronous. Promise
-callbacks would be ran after the test case has run all of its statements. What
-we want is a way to force the promise callbacks to run after calling the
-deferreds' `resolve()` method, and before we call the test's assertions.
+This test will actually fail because promise callbacks are asynchronous, so any
+callbacks sitting in the queue will run after the last statement of this test
+due to [run to completion][r] semantics. In other words the promise callback for
+the `Promise.all` call: `() => { this.finished = true; }` will have run after
+this test has already exited!
 
-To figure out how to proceed, we need to understand how promise callbacks are
-scheduled when they are resolved or rejected. Jake Archibald's article on
-[Tasks, microtasks, queues and schedules][t] goes in depth on exactly that
-topic, and I highly recommend reading it.
-
-In summary: Promise callbacks are queued in the **microtask** queue and
-callbacks of `setImmediate(fn)` and `setTimeout(fn)` are queued in the
-**macrotask** queue. Callbacks sitting on the microtask queue are run right
-after the stack empties out, and if a microtask schedules another microtask,
-then they will continually be pulled off the queue before yielding to the
-macrotask queue.
-
-With this knowledge, we can use `setImmediate()` to force all promise callbacks
-to run by the time it runs its own callback. We also need to use the `done`
-pattern for async tests in jest/mocha. This would make the test pass:
+Jest (and other testing frameworks) provides a way to deal with asynchrony by
+preventing the test from exiting after the last statement. We would have to call
+the provided `done` function in order to tell the runner that the test has
+finished. Now you may think something like this would work:
 
 ```js
-it('sets finished to true after all promises have resolved', (done) => {
+test('sets finished to true after all promises have resolved', (done) => {
+  const d1 = new Deferred();
+  const d2 = new Deferred();
+
+  const indicator = new PromisesHaveFinishedIndicator([d1.promise, d2.promise]);
+
   expect(indicator.finished).toBe(false);
 
-  deferreds[1].resolve();
-  setImmediate(() => {
+  d2.resolve();
+  d2.then(() => {
     expect(indicator.finished).toBe(false);
 
-    deferreds[0].resolve();
-    setImmediate(() => {
+    d1.resolve();
+    d1.then(() => {
       expect(indicator.finished).toBe(true);
       done();
     });
@@ -91,56 +98,101 @@ it('sets finished to true after all promises have resolved', (done) => {
 });
 ```
 
-But this is really ugly because every time we flush the microtask queue by using
-`setImmediate()` we introduce a level of indentation. We can flatten the
-indentation by using promises:
+However this will also fail. The reason lies in the implementation of
+`Promise.all`. When `resolve` is called on `d1` (and `d2` as well),
+`Promise.all` schedules a callback that checks whether all promises have
+resolved. If this check returns true, it will resolve the promise returned from
+the `Promise.all` call which would then enqueue the `() => { this.finished =
+true; }` callback. This callback is still sitting in the queue by the time
+`done` is called!
+
+Now the question is how do we make the callback that sets `this.finished` to
+`true` to run before calling `done`? To answer this we need to understand how
+promise callbacks are scheduled when promises are resolved or rejected. Jake
+Archibald's article on [Tasks, microtasks, queues and schedules][t] goes in
+depth on exactly that topic, and I highly recommend reading it.
+
+In summary: Promise callbacks are queued onto the microtask queue and
+callbacks of APIs such as `setTimeout(fn)` and `setInterval(fn)` are queued
+onto the macrotask queue. Callbacks sitting on the microtask queue are run right
+after the stack empties out, and if a microtask schedules another microtask,
+then they will continually be pulled off the queue before yielding to the
+macrotask queue.
+
+With this knowledge, we can make this test pass by using `setTimeout` instead of
+`then()`:
 
 ```js
-function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
-}
+test('sets finished to true after all promises have resolved', (done) => {
+  const d1 = new Deferred();
+  const d2 = new Deferred();
 
-it('sets finished to true after all promises have resolved', (done) => {
+  const indicator = new PromisesHaveFinishedIndicator([d1.promise, d2.promise]);
+
   expect(indicator.finished).toBe(false);
 
-  deferreds[1].resolve();
-  flushPromises().then(() => {
+  d2.resolve();
+  setTimeout(() => {
     expect(indicator.finished).toBe(false);
 
-    deferreds[0].resolve();
-    return flushPromises();
-  }).then(() => {
-    expect(indicator.finished).toBe(true);
-    done();
-  });
+    d1.resolve();
+    setTimeout(() => {
+      expect(indicator.finished).toBe(true);
+      done();
+    }, 0);
+  }, 0);
 });
 ```
 
-Still, this would require at least 1 level of indentation. To remove all levels
-of indentation we could use [`async/await`][ja] in `jest` (and `mocha`)!
+The reason this works is because by the time second `setTimeout` callback runs,
+we know that these promise callbacks have run:
+
+- The callback inside the implementation of `Promise.all` that checks that all
+  promises have resolved, then resolves the returned promise.
+- The callback that sets `this.finished = true`.
+
+Having a bunch of `setTimeout(fn, 0)` in our code is unsightly to say the least.
+We can clean this up with the new [`async/await`][a] syntax:
 
 ```js
 function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
+  return new Promise((resolve, reject) => setTimeout(resolve, 0));
 }
 
-it('sets finished to true after all promises have resolved', async () => {
-  thing.run(promises);
+test('sets finished to true after all promises have resolved', async () => {
+  const d1 = new Deferred();
+  const d2 = new Deferred();
+
+  const indicator = new PromisesHaveFinishedIndicator([d1.promise, d2.promise]);
+
   expect(indicator.finished).toBe(false);
 
-  deferreds[1].resolve();
+  d2.resolve();
   await flushPromises();
   expect(indicator.finished).toBe(false);
 
-  deferreds[0].resolve();
+  d1.resolve();
   await flushPromises();
   expect(indicator.finished).toBe(true);
 });
 ```
 
-[d]: https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred
+If you want to be extra fancy, you can use `setImmediate` instead of
+`setTimeout` in some environments (Node.js). It is faster than `setTimeout` but
+still runs after microtasks:
+
+```js
+function flushPromises() {
+  return new Promise(resolve => setImmediate(resolve));
+}
+```
+
+When writing tests involving promises and asynchrony, it is beneficial to
+understand how callbacks are scheduled and the roles that different queues play
+on the event loop. Having this knowledge allows us to reason with asynchrounous
+the code that we write.
+
+[a]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
 [j]: https://facebook.github.io/jest/
-[ja]: https://facebook.github.io/jest/docs/tutorial-async.html
-[m]: https://mochajs.org/
-[p]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+[r]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#Run-to-completion
 [t]: https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
