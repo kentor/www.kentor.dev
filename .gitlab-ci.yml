@@ -6,7 +6,6 @@ pages:
     - node_modules/
   stage: deploy
   script:
-  - npm install -g yarn
   - yarn
   - npm run clean
   - NODE_ENV=production npm run build
