@@ -6,6 +6,7 @@ pages:
     - node_modules/
   stage: deploy
   script:
+  - npm install -g node-gyp
   - yarn
   - npm run clean
   - NODE_ENV=production npm run build
