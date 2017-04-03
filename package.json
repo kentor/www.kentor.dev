@@ -35,7 +35,6 @@
     "eslint-config-kentor": "3.14.0",
     "eslint-plugin-react": "6.10.0",
     "eslint-watch": "3.0.0",
-    "farmhash": "1.2.1",
     "front-matter": "2.1.2",
     "fs-promise": "2.0.0",
     "gulp": "3.9.1",
