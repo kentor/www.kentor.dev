@@ -6,7 +6,7 @@
   "scripts": {
     "assets:build": "gulp build",
     "assets:watch": "gulp watch",
-    "build": "npm-run-all html:build assets:build html:build",
+    "build": "npm-run-all clean html:build assets:build html:build",
     "clean": "rimraf public && mkdirp public",
     "html:build": "babel-node lib/build.js",
     "html:watch": "babel-node .",
