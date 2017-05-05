@@ -2120,9 +2120,9 @@ fined@^1.0.1:
     lodash.pick "^4.2.1"
     parse-filepath "^1.0.1"
 
-firebase-tools@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-3.6.1.tgz#ab1e788f42ab29135ff9225de85b0cfe088ad17d"
+firebase-tools@3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-3.7.0.tgz#45e8cc9ab86f790f7529ea45d358abebd51af9cc"
   dependencies:
     JSONStream "^1.2.1"
     archiver "^0.16.0"
@@ -5988,9 +5988,9 @@ table@^3.7.8:
     slice-ansi "0.0.4"
     string-width "^2.0.0"
 
-tachyons@4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/tachyons/-/tachyons-4.7.0.tgz#228eed0badca01cf793ef7cc6103a60c8f8b0f3e"
+tachyons@4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/tachyons/-/tachyons-4.7.1.tgz#2ca7295f3eb081470e54d23ef94fffe4322153b4"
 
 tar-pack@^3.4.0:
   version "3.4.0"
