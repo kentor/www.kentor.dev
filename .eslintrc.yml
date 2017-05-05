@@ -3,3 +3,5 @@ extends:
   - kentor
   - kentor/es6
   - kentor/react
+parserOptions:
+  ecmaVersion: 2017
