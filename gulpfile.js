@@ -1,19 +1,15 @@
 const cssnano = require('gulp-cssnano');
 const cssnext = require('postcss-cssnext');
+const del = require('del');
 const gulp = require('gulp');
+const newer = require('gulp-newer');
+const path = require('path');
 const postcss = require('gulp-postcss');
 const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
 const rev = require('gulp-rev');
 const sourcemaps = require('gulp-sourcemaps');
 const uncss = require('gulp-uncss');
-
-gulp.task('assets', function() {
-  return gulp.src([
-    'src/images/**/*',
-  ], { base: 'src' })
-    .pipe(gulp.dest('public'));
-});
 
 const processors = [
   postcssImport,
@@ -56,12 +52,31 @@ gulp.task('css:build', function() {
     ;
 });
 
+gulp.task('static', () => {
+  return gulp.src('static/**/*', { base: 'static' })
+    .pipe(newer('public'))
+    .pipe(gulp.dest('public'));
+});
+
+gulp.task('static:watch', () => {
+  const dest = path.resolve('public');
+  const src = path.resolve('static');
+
+  const watcher = gulp.watch('static/**/*', ['static']);
+
+  watcher.on('change', event => {
+    if (event.type === 'deleted') {
+      del(event.path.replace(src, dest));
+    }
+  });
+});
+
 gulp.task('build', [
-  'assets',
   'css:build',
+  'static',
 ]);
 
 gulp.task('watch', [
-  'assets',
   'css:watch',
+  'static:watch',
 ]);
