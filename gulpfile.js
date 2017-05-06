@@ -21,7 +21,7 @@ const processors = [
   }),
 ];
 
-gulp.task('css', function() {
+gulp.task('css', () => {
   return gulp.src('src/css/app.css')
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
@@ -29,11 +29,11 @@ gulp.task('css', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('css:watch', ['css'], function() {
+gulp.task('css:watch', ['css'], () => {
   gulp.watch('src/css/**/*', ['css']);
 });
 
-gulp.task('css:build', function() {
+gulp.task('css:build', () => {
   return gulp.src('src/css/app.css')
     .pipe(postcss(processors))
     .pipe(uncss({
