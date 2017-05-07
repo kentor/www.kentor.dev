@@ -8,7 +8,7 @@
     "assets:watch": "gulp watch",
     "build": "npm-run-all clean html:build assets:build html:build",
     "clean": "rimraf public && mkdirp public",
-    "deploy": "firebase deploy",
+    "deploy": "firebase deploy --project blog-b5600",
     "html:build": "babel-node lib/index.js",
     "html:watch": "babel-node lib/index.js --watch",
     "lint": "eslint .",
