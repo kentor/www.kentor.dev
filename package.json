@@ -13,7 +13,7 @@
     "html:watch": "babel-node lib/index.js --watch",
     "lint": "eslint .",
     "lint:watch": "esw -w",
-    "server": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open",
+    "server": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open --reload-debounce 1",
     "start": "npm-run-all clean --parallel assets:watch html:watch lint:watch server"
   },
   "author": "Kenneth Chung",
