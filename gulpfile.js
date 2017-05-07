@@ -5,9 +5,8 @@ const gulp = require('gulp');
 const newer = require('gulp-newer');
 const path = require('path');
 const postcss = require('gulp-postcss');
-const postcssAssets = require('postcss-assets');
 const postcssImport = require('postcss-import');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-all');
 const sourcemaps = require('gulp-sourcemaps');
 const uncss = require('gulp-uncss');
 
@@ -15,9 +14,6 @@ const processors = [
   postcssImport,
   cssnext({
     browsers: ['last 1 version'],
-  }),
-  postcssAssets({
-    loadPaths: ['src'],
   }),
 ];
 
@@ -44,12 +40,18 @@ gulp.task('css:build', () => {
         removeAll: true,
       },
     }))
+    .pipe(gulp.dest('public'));
+});
+
+gulp.task('rev', () => {
+  return gulp.src('public/**/*')
+    .pipe(rev.revision({
+      dontRenameFile: ['.html', '.json', '.xml'],
+      dontUpdateReference: ['.xml'],
+    }))
     .pipe(gulp.dest('public'))
-    .pipe(rev())
-    .pipe(gulp.dest('public'))
-    .pipe(rev.manifest())
-    .pipe(gulp.dest('public'))
-    ;
+    .pipe(rev.manifestFile())
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('static', () => {
