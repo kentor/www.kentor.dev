@@ -39,15 +39,6 @@ hr {
   width: 32px;
 }
 
-/* from marky-markdown */
-.deep-link {
-  font-weight: 600;
-}
-
-.deep-link a {
-  text-decoration: none;
-}
-
 .PostContent img {
   max-width: 100%;
 }
@@ -56,6 +47,20 @@ hr {
   color: var(--solarized-magenta);
   font-size: 0.875em;
   word-break: break-word;
+}
+
+.PostContent h3:not(:hover) .deep-link {
+  display: none;
+}
+
+.PostContent h3 {
+  position: relative;
+}
+
+.PostContent .deep-link {
+  left: -24px;
+  padding: 0 4px;
+  position: absolute;
 }
 
 .editor {
