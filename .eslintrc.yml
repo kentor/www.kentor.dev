@@ -5,3 +5,5 @@ extends:
   - kentor/react
 parserOptions:
   ecmaVersion: 2017
+rules:
+  no-func-assign: 0
