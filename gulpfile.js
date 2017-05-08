@@ -47,7 +47,7 @@ gulp.task('rev', () => {
   return gulp.src('public/**/*')
     .pipe(rev.revision({
       dontRenameFile: ['.html', '.json', '.xml'],
-      dontUpdateReference: ['.xml'],
+      dontUpdateReference: ['.html', '.json', '.xml'],
     }))
     .pipe(gulp.dest('public'))
     .pipe(rev.manifestFile())
