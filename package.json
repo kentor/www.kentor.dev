@@ -6,17 +6,19 @@
   "scripts": {
     "assets:build": "gulp build",
     "assets:watch": "gulp watch",
-    "build": "npm-run-all clean html:build assets:build rev",
+    "build": "npm-run-all clean html:build --parallel assets:build js:build --sequential rev",
     "clean": "rimraf public && mkdirp public",
     "deploy": "firebase deploy --project blog-b5600",
     "gulp": "gulp",
     "html:build": "babel-node lib/index.js",
     "html:watch": "babel-node lib/index.js --watch",
+    "js:build": "NODE_ENV=production browserify src/js/index.js -p bundle-collapser/plugin -p dep-case-verify -g loose-envify -g unreachable-branch-transform | uglifyjs -c -m -o public/bundle.js",
+    "js:watch": "watchify src/js/index.js -p dep-case-verify -o public/bundle.js -v",
     "lint": "eslint .",
     "lint:watch": "esw -w",
     "rev": "gulp rev",
-    "server": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open --reload-debounce 1",
-    "start": "npm-run-all clean --parallel assets:watch html:watch lint:watch server"
+    "serve": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open --reload-debounce 1",
+    "start": "npm-run-all clean --parallel assets:watch html:watch lint:watch js:watch serve"
   },
   "author": "Kenneth Chung",
   "homepage": "http://kentor.me/",
@@ -30,9 +32,13 @@
     "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.23.0",
     "babel-preset-bluebird": "1.0.1",
+    "babel-preset-env": "1.4.0",
     "babel-preset-react": "6.24.1",
+    "babelify": "7.3.0",
     "bluebird": "3.5.0",
     "browser-sync": "2.18.8",
+    "browserify": "14.3.0",
+    "bundle-collapser": "1.2.1",
     "chalk": "1.1.3",
     "cheerio": "0.22.0",
     "chokidar": "1.6.1",
@@ -40,6 +46,7 @@
     "debounce-promise": "3.0.1",
     "debug": "2.6.6",
     "del": "2.2.2",
+    "dep-case-verify": "2.1.0",
     "dependency-graph": "0.5.0",
     "dotenv": "4.0.0",
     "eslint": "3.19.0",
@@ -56,6 +63,7 @@
     "gulp-rev-all": "0.9.7",
     "gulp-sourcemaps": "2.6.0",
     "gulp-uncss": "1.0.6",
+    "loose-envify": "1.3.1",
     "marky-markdown": "9.0.3",
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
@@ -69,6 +77,14 @@
     "reuse-promise": "1.1.0",
     "rimraf": "2.6.1",
     "rss": "1.2.2",
-    "tachyons": "4.7.1"
+    "tachyons": "4.7.1",
+    "uglify-js": "2.8.23",
+    "unreachable-branch-transform": "0.5.1",
+    "watchify": "3.9.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
   }
 }
