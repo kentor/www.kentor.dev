@@ -29,9 +29,8 @@
   "dependencies": {
     "algoliasearch": "3.22.1",
     "babel-cli": "6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.23.0",
-    "babel-preset-bluebird": "1.0.1",
+    "babel-plugin-transform-promise-to-bluebird": "1.1.1",
     "babel-preset-env": "1.4.0",
     "babel-preset-react": "6.24.1",
     "babelify": "7.3.0",
