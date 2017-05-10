@@ -1,6 +1,6 @@
 const cssnano = require('gulp-cssnano');
 const cssnext = require('postcss-cssnext');
-const del = require('del');
+const fs = require('fs-extra');
 const gulp = require('gulp');
 const newer = require('gulp-newer');
 const path = require('path');
@@ -68,7 +68,7 @@ gulp.task('static:watch', () => {
 
   watcher.on('change', event => {
     if (event.type === 'deleted') {
-      del(event.path.replace(src, dest));
+      fs.remove(event.path.replace(src, dest));
     }
   });
 });

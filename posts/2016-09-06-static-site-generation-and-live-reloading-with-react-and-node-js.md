@@ -13,7 +13,7 @@ In its entirety:
 ```js
 const cache = require('./cache');
 const colors = require('colors/safe');
-const fsp = require('fs-promise');
+const fs = require('fs-extra');
 const path = require('path');
 const ReactDOMServer = require('react-dom/server');
 
@@ -28,9 +28,9 @@ module.exports = function writeReactElement(element, url) {
 
   const outputDir = path.join(path.resolve('public'), url);
 
-  return fsp.mkdirs(outputDir).then(() => {
+  return fs.mkdirp(outputDir).then(() => {
     const outputFile = path.join(outputDir, 'index.html');
-    return fsp.writeFile(outputFile, html);
+    return fs.writeFile(outputFile, html);
   }).then(() => {
     console.log(colors.green('wrote'), url, html.length);
   });
