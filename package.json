@@ -29,12 +29,10 @@
   "dependencies": {
     "algoliasearch": "3.22.1",
     "babel-plugin-transform-object-rest-spread": "6.23.0",
-    "babel-plugin-transform-promise-to-bluebird": "1.1.1",
     "babel-preset-env": "1.4.0",
     "babel-preset-react": "6.24.1",
     "babel-register": "6.24.1",
     "babelify": "7.3.0",
-    "bluebird": "3.5.0",
     "browser-sync": "2.18.8",
     "browserify": "14.3.0",
     "bundle-collapser": "1.2.1",
