@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-exec node -r dotenv/config -r loud-rejection/register -r babel-register "$@"
+exec node \
+  -r dotenv/config \
+  -r loud-rejection/register \
+  -r babel-register \
+  "$@"
