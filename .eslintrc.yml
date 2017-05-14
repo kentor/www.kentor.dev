@@ -1,9 +1,14 @@
 ---
+env:
+  jest/globals: true
 extends:
   - kentor
   - kentor/es6
   - kentor/react
+  - plugin:jest/recommended
 parserOptions:
   ecmaVersion: 2017
+plugins:
+  - jest
 rules:
   no-func-assign: 0

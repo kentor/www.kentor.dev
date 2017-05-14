@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/.bin/jest",
+      "args": ["--runInBand"],
+      "runtimeExecutable": null,
+      "runtimeArgs": ["--nolazy"]
+    }
+  ]
+}
