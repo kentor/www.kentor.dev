@@ -1,7 +1,9 @@
-## About [![devDependencies Status](https://david-dm.org/kentor/kentor.me/master/dev-status.svg)](https://david-dm.org/kentor/kentor.me/master?type=dev)
+## About
 
-This is the source to my [blog][b]. It is a static site built on [React][r] and
-Node.js.
+[![devDependencies Status](https://david-dm.org/kentor/kentor.me/master/status.svg)](https://david-dm.org/kentor/kentor.me/master)
+
+This is the source to my [blog][b]. It is a static site built with [React][r] and [tiny-ssg][t].
 
 [b]: http://kentor.me
 [r]: https://facebook.github.io/react/
+[t]: https://github.com/kentor/tiny-ssg
