@@ -1,5 +1,5 @@
 ---
-title: Testing Promise Side Effects with Async/Await
+title: Testing promise side effects with async/await
 ---
 
 You might have run into situations where you're calling asynchronous code inside
@@ -65,11 +65,11 @@ test('sets finished to true after all promises have resolved', () => {
 });
 ```
 
-This test will actually fail because promise callbacks are asynchronous, so any
-callbacks sitting in the queue will run after the last statement of this test
-due to [run to completion][r] semantics. In other words the promise callback for
-the `Promise.all` call: `() => { this.finished = true; }` will have run after
-this test has already exited!
+This test will actually fail because promise callbacks are asynchronous, in
+other words they will be queued and will only run after the last statement of
+this test due to [run to completion][r] semantics. In other words the promise
+callback for the `Promise.all` call: `() => { this.finished = true; }` will have
+run after this test has already exited!
 
 Jest (and other testing frameworks) provides a way to deal with asynchrony by
 preventing the test from exiting after the last statement. We would have to call
@@ -147,8 +147,9 @@ test('sets finished to true after all promises have resolved', (done) => {
 The reason this works is because by the time second `setTimeout` callback runs,
 we know that these promise callbacks have run:
 
-- The callback inside the implementation of `Promise.all` that checks that all
-  promises have resolved, then resolves the returned promise.
+- The callbacks inside the implementation of `Promise.all` that checks that all
+  promises have resolved. These are the callbacks attached to `d1.then` and
+  `d2.then` by `Promise.all`.
 - The callback that sets `this.finished = true`.
 
 Having a bunch of `setTimeout(fn, 0)` in our code is unsightly to say the least.
@@ -187,12 +188,16 @@ function flushPromises() {
 }
 ```
 
+I have published the `flushPromises` function as the [`flush-promises`][f]
+package on npm.
+
 When writing tests involving promises and asynchrony, it is beneficial to
 understand how callbacks are scheduled and the roles that different queues play
 on the event loop. Having this knowledge allows us to reason with asynchrounous
 the code that we write.
 
 [a]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
+[f]: https://github.com/kentor/flush-promises
 [j]: https://facebook.github.io/jest/
 [r]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#Run-to-completion
 [t]: https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
