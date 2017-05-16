@@ -1,13 +1,14 @@
 ---
 title: Node.js hot module reloading development
 ---
+
 Imagine running a Node.js process that watches the current working directory for
 file changes, and have it pass the filename of any updated files to a callback.
-Now imagine changing the implementation of that callback and have subsequent
-file updates execute the new callback without exiting the Node.js process.
-Furthermore, imagine calls to `require()` always load the newest version of the
-required module (usually they’re cached), so that when the callback executes
-again, it has the newest version of the modules.
+Now imagine changing the implementation of that callback and making subsequent
+file updates execute the new callback on save, without exiting the Node.js
+process. Furthermore, imagine calls to `require()` always load the newest
+version of the required module (usually they’re cached), so that when the
+callback executes again, it uses the newest version of the modules.
 
 I wanted a system like that when I was thinking about how I would write the
 static site generator for this very blog. I wanted it so that whenever I saved a
@@ -81,14 +82,11 @@ process.
 
 ### Module cache busting optimization
 
-The above example should work for most cases, and what I’m about to show could
-be considered premature optimization, so it’s fine to skip this part, but I just
-wanted to share it anyway.
-
-In the `fs.watch()` callback we looped through the entire module cache and
-deleted from it the ones that don’t live in `node_modules`. This operation is
+In the `fs.watch()` callback we looped through the entire `require.cache` and
+deleted from it the modules that don’t live in `node_modules`. This operation is
 pretty fast on my machine, but not entirely optimal. What’s optimal is if we
-deleted only the module that was updated, and all of that module’s dependants.
+deleted only the updated module, and all of that module’s dependents because
+otherwise they would be referencing an older version of the updated module.
 
 To achieve something like that we would need to have a dependency graph of our
 modules during the lifetime of the process. For this I had to dig into how
@@ -103,7 +101,7 @@ function that we see in a module is just a wrapper around the `module.require`
 function. `module.require` is implemented on `Module.prototype.require`, so we
 can monkey patch that to build the dependency graph.
 
-Once we have the dependency graph, we can query it for the dependants of the
+Once we have the dependency graph, we can query it for the dependents of the
 update module, and delete the affected modules from the module cache. With that,
 I present to you the optimized cache busting code. It relies on the
 [`dependency-graph`][d] library.
@@ -132,8 +130,30 @@ fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
   if (graph.hasNode(absFilename)) {
     graph.dependantsOf(absFilename).concat([absFilename]).forEach(module => {
       delete require.cache[module];
+      graph.removeNode(module);
     });
   }
+
+  try {
+    require('./handler')(event, filename);
+  } catch (err) {
+    console.log(err);
+  }
+});
+```
+
+This way of invalidating a module has been extracted to my
+[invalidate-module][i] library. Using that, the above will look like this:
+
+```js
+const fs = require('fs');
+const invalidate = require('invalidate-module');
+const path = require('path');
+
+fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
+  const absFilename = path.resolve(filename);
+
+  invalidate(absFileName);
 
   try {
     require('./handler')(event, filename);
@@ -146,23 +166,21 @@ fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
 ### Caveats
 
 `fs.watch()` is not 100% consistent across platforms, and the recursive option
-is only supported on OS X and Windows. I’m only developing on a OS X so I
-haven’t tested this out on other operating systems. See the documentation for
-`fs.watch` [here][w].
+is only supported on OS X and Windows. See the documentation for `fs.watch`
+[here][w]. You can use something like [chokidar][c] instead, which should be
+work better across platforms.
 
 The dependency graph in the optimized module cache busting will throw an error
 if it detects a cycle. I haven’t bothered to handle that case yet.
 
 ### Closing
 
-I've uploaded a boilerplate for the code explained in this article to
-[Github][g].
-
 Be creative with what you can do with such a system, and let me know what you
 come up with! Like I said, I’m using it as a static site generator with React
 and live reloading, and it's been working pretty well.
 
+[c]: https://github.com/paulmillr/chokidar
 [d]: https://www.npmjs.com/package/dependency-graph
 [f]: http://fredkschott.com/post/2014/06/require-and-the-module-system/
-[g]: https://github.com/kentor/node-hot-reloading-boilerplate
+[i]: https://github.com/kentor/invalidate-module
 [w]: https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener
