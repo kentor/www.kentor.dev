@@ -8,7 +8,7 @@
     "assets:watch": "gulp watch",
     "build": "NODE_ENV=production npm-run-all clean html:build -p assets:build js:build -s rev",
     "clean": "rimraf public && mkdirp public",
-    "deploy": "firebase deploy --project blog-b5600",
+    "deploy": "npm run build && firebase deploy --project blog-b5600",
     "gulp": "gulp",
     "html:build": "./node lib/scripts/build.js",
     "html:watch": "./node lib/scripts/watch.js",
