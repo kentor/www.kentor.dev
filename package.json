@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "lint:watch": "esw -w",
     "rev": "gulp rev",
-    "serve": "browser-sync start -s public --files 'public/**/*' --no-notify --no-open --reload-debounce 1",
+    "serve": "browser-sync start -s public --files 'public/**/*' --no-ghost-mode --no-notify --no-open --no-ui --reload-debounce 1",
     "start": "npm-run-all clean -p assets:watch html:watch lint:watch js:watch serve"
   },
   "author": "Kenneth Chung",
