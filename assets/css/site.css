@@ -54,13 +54,22 @@ hr {
 }
 
 .PostContent h3 {
-  position: relative;
+  display: flex;
 }
 
-.PostContent .deep-link {
-  left: -24px;
-  padding: 0 4px;
-  position: absolute;
+.deep-link {
+  order: 1;
+  padding-left: .5rem;
+  text-decoration: none;
+}
+
+.deep-link:before {
+  content: '#';
+}
+
+.deep-link:hover {
+  color: var(--solarized-blue);
+  text-decoration: underline;
 }
 
 .editor {
