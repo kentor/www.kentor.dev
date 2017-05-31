@@ -7,7 +7,4 @@
     }],
     ["react"],
   ],
-  "plugins": [
-    ["transform-object-rest-spread", { "useBuiltIns": true }],
-  ],
 }
