@@ -1813,21 +1813,21 @@ concat-stream@1.5.0:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-concat-stream@^1.5.0, concat-stream@^1.5.2, concat-stream@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-1.6.0.tgz#0aac662fd52be78964d5532f694784e70110acf7"
-  dependencies:
-    inherits "^2.0.3"
-    readable-stream "^2.2.2"
-    typedarray "^0.0.6"
-
-concat-stream@~1.5.0, concat-stream@~1.5.1:
+concat-stream@^1.5.0, concat-stream@^1.5.2, concat-stream@~1.5.0, concat-stream@~1.5.1:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-1.5.2.tgz#708978624d856af41a5a741defdd261da752c266"
   dependencies:
     inherits "~2.0.1"
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
+
+concat-stream@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-1.6.0.tgz#0aac662fd52be78964d5532f694784e70110acf7"
+  dependencies:
+    inherits "^2.0.3"
+    readable-stream "^2.2.2"
+    typedarray "^0.0.6"
 
 configstore@3.1.0, configstore@^3.0.0:
   version "3.1.0"
@@ -2195,7 +2195,7 @@ debug@2.2.0, debug@~2.2.0:
   dependencies:
     ms "0.7.1"
 
-debug@2.3.3:
+debug@2.3.3, debug@^2.1.1:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
   dependencies:
@@ -2219,7 +2219,7 @@ debug@2.6.7:
   dependencies:
     ms "2.0.0"
 
-debug@2.6.8, debug@2.X, debug@^2.1.1, debug@^2.2.0, debug@^2.6.3, debug@^2.6.6:
+debug@2.6.8, debug@2.X, debug@^2.2.0, debug@^2.6.3, debug@^2.6.6:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
@@ -3446,9 +3446,9 @@ github-slugger@^1.0.0:
   dependencies:
     emoji-regex ">=6.0.0 <=6.1.1"
 
-github-url-to-object@^2.2.3:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/github-url-to-object/-/github-url-to-object-2.2.6.tgz#ca9250165149748eeeb30bfcc6000c6fe0d242f7"
+github-url-to-object@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/github-url-to-object/-/github-url-to-object-3.1.0.tgz#160a5d55ad7cf0459e0757f7912d718076b7ed7d"
   dependencies:
     is-url "^1.1.0"
 
@@ -3961,7 +3961,7 @@ highlights-tokens@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/highlights-tokens/-/highlights-tokens-1.0.1.tgz#90919fe94954cfff518d6552e4beaf4a654d5dea"
 
-highlights@^2.1.3:
+highlights@^2.1.1:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/highlights/-/highlights-2.1.3.tgz#05b9760a0e01036a74ce192cba9796707bcafc49"
   dependencies:
@@ -4153,7 +4153,7 @@ inline-source-map@~0.6.0:
   dependencies:
     source-map "~0.5.3"
 
-innertext@^1.0.1:
+innertext@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/innertext/-/innertext-1.0.2.tgz#11a197b3143a593636fba5d59213835e6954580a"
   dependencies:
@@ -4229,10 +4229,6 @@ is-absolute@^0.2.3:
 is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
-
-is-badge@^1.1.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/is-badge/-/is-badge-1.3.0.tgz#da185c9d902f714232f1b2f636e3db01c124a433"
 
 is-binary-path@^1.0.0:
   version "1.0.1"
@@ -4354,7 +4350,7 @@ is-path-inside@^1.0.0:
   dependencies:
     path-is-inside "^1.0.1"
 
-is-plain-obj@^1.0.0:
+is-plain-obj@^1.0.0, is-plain-obj@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-plain-obj/-/is-plain-obj-1.1.0.tgz#71a50c8429dfca773c92a390a4a03b39fcd51d3e"
 
@@ -5182,7 +5178,7 @@ markdown-it-emoji@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/markdown-it-emoji/-/markdown-it-emoji-1.3.0.tgz#903ae1a9968c3f17d4e142f115d4ec575e56d2cb"
 
-markdown-it-expand-tabs@^1.0.7:
+markdown-it-expand-tabs@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/markdown-it-expand-tabs/-/markdown-it-expand-tabs-1.0.12.tgz#f54bd2f303f858ee6798ca2bd83fe70144814ca0"
   dependencies:
@@ -5192,11 +5188,11 @@ markdown-it-lazy-headers@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/markdown-it-lazy-headers/-/markdown-it-lazy-headers-0.1.3.tgz#e70dd4da79c87a9ce82ca4701b8b7c0e2d72297b"
 
-markdown-it-task-lists@^1.0.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/markdown-it-task-lists/-/markdown-it-task-lists-1.4.1.tgz#ca7babc76a678e10837d75a90183f45112b87b05"
+markdown-it-task-lists@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/markdown-it-task-lists/-/markdown-it-task-lists-2.0.1.tgz#a9ce7f55cde9f45e0fca629071d11d3fd5a69416"
 
-markdown-it@^8.0.0:
+markdown-it@^8.2.0:
   version "8.3.1"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-8.3.1.tgz#2f4b622948ccdc193d66f3ca2d43125ac4ac7323"
   dependencies:
@@ -5206,18 +5202,18 @@ markdown-it@^8.0.0:
     mdurl "^1.0.1"
     uc.micro "^1.0.3"
 
-marky-markdown@9.0.3:
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/marky-markdown/-/marky-markdown-9.0.3.tgz#476c7197bc8942aaf7f4821f99ecdc153c941c20"
+marky-markdown@10:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/marky-markdown/-/marky-markdown-10.0.0.tgz#eb28862a63f9a720055b0118fbbb41dc5fe782a0"
   dependencies:
     atom-language-diff "^1.0.0"
     atom-language-nginx "^0.6.1"
     github-slugger "^1.0.0"
-    github-url-to-object "^2.2.3"
-    highlights "^2.1.3"
+    github-url-to-object "^3.0.0"
+    highlights "^2.1.1"
     highlights-tokens "^1.0.1"
-    innertext "^1.0.1"
-    is-badge "^1.1.0"
+    innertext "^1.0.2"
+    is-plain-obj "^1.1.0"
     language-dart "^0.1.1"
     language-erlang "^2.0.0"
     language-glsl "^2.0.1"
@@ -5228,11 +5224,11 @@ marky-markdown@9.0.3:
     lodash.assign "^4.0.2"
     lodash.defaults "^4.0.1"
     lodash.pickby "^4.2.1"
-    markdown-it "^8.0.0"
+    markdown-it "^8.2.0"
     markdown-it-emoji "^1.3.0"
-    markdown-it-expand-tabs "^1.0.7"
+    markdown-it-expand-tabs "^1.0.12"
     markdown-it-lazy-headers "^0.1.3"
-    markdown-it-task-lists "^1.0.0"
+    markdown-it-task-lists "^2.0.1"
     property-ttl "^1.0.0"
     sanitize-html "^1.6.1"
     similarity "^1.0.1"
@@ -5323,13 +5319,13 @@ mime-db@~1.27.0:
   version "1.27.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.27.0.tgz#820f572296bbd20ec25ed55e5b5de869e5436eb1"
 
-mime-types@2.1.13, mime-types@^2.0.4, mime-types@^2.0.8, mime-types@^2.1.11, mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.7:
+mime-types@2.1.13, mime-types@^2.0.4, mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.7:
   version "2.1.13"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.13.tgz#e07aaa9c6c6b9a7ca3012c69003ad25a39e92a88"
   dependencies:
     mime-db "~1.25.0"
 
-mime-types@~2.1.15:
+mime-types@^2.1.11, mime-types@~2.1.15:
   version "2.1.15"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.15.tgz#a4ebf5064094569237b8cf70046776d09fc92aed"
   dependencies:
