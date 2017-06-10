@@ -2,185 +2,114 @@
 title: Node.js hot module reloading development
 ---
 
-Imagine running a Node.js process that watches the current working directory for
-file changes, and have it pass the filename of any updated files to a callback.
-Now imagine changing the implementation of that callback and making subsequent
-file updates execute the new callback on save, without exiting the Node.js
-process. Furthermore, imagine calls to `require()` always load the newest
-version of the required module (usually they’re cached), so that when the
-callback executes again, it uses the newest version of the modules.
+Imagine running a Node.js process that watches the current working directory and
+runs a callback every time a file is updated. Furthermore, imagine if any
+modules required by the callback is reloaded if they have been modified. That
+process would look something like this:
 
-I wanted a system like that when I was thinking about how I would write the
-static site generator for this very blog. I wanted it so that whenever I saved a
-markdown file in a specific directory, it would run a function to convert the
-markdown into HTML and write it out to disk. And since I’ll be using React, I
-wanted it so that whenever I update a layout component, the system would rebuild
-the entire site.
+<div class="tc" style="height: 559px">
+<script type="text/javascript" src="https://asciinema.org/a/74tj8uryqil4cweedz4g72gsv.js" id="asciicast-74tj8uryqil4cweedz4g72gsv" async></script>
+</div>
 
-It’s actually pretty easy to implement such a system with only the Node.js APIs.
-At a high level, the system works like this:
+That would be a lot faster than starting a new Node.js process to re-run the
+script because it would bypass the overhead of starting a new Node.js process
+and requiring/parsing modules that have not been modified.
 
-1. The entry script watches the current working directory via
-   `fs.watch(process.cwd(), { recursive: true }, (event, filename) => { ... });`
+I was thinking about how I would implement such a system when rewriting the
+static site generator for this blog. I wanted a program that rebuilds the site
+on changes to any markdown file in the posts directory, or on changes to React
+components that were used for generating the layout markup.
 
-2. The callback to `fs.watch()` clears local modules from the `require.cache` so
-   that subsequent calls to `require()` will load the new implementation of the
-   required module.
+It's actually possible to achieve this with very few npm modules. Basically we
+need these parts:
 
-3. The callback then calls `require('./handler')` which is a module that exports
-   a function, and the handler is passed the `event` and `filename` arguments.
-   Since we’ve cleared the `require` cache, the `./handler` module is hot
-   swapped with the new version.
+- The entry script that launches a watcher over certain files in our current
+working directory. I recommend the [chokidar][c] library for this purpose which
+works well across different platforms.
 
-In otherwords, we have a directory with `index.js` and `handler.js`:
+- Since Node.js caches modules after they are first required, we need a way to
+invalidate stale modules from the require cache. For this, I use my library
+[invalidate-module][i].
 
-```
-.
-├── handler.js
-└── index.js
-```
+- A build script to run when watched files are modified.
 
-`index.js` looks like this:
+Here's a basic watch script that serves as the entry point to this system:
 
 ```js
-const fs = require('fs');
-
-fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
-  Object.keys(require.cache).forEach(module => {
-    if (!module.match(/node_modules/)) {
-      delete require.cache[module];
-    }
-  });
-
-  try {
-    require('./handler')(event, filename);
-  } catch (err) {
-    console.log(err);
-  }
-});
-```
-
-and `handler.js` exports a function that takes `(event, filename)`:
-
-```js
-module.exports = (event, filename) => {
-  // do something with event and filename
-  console.log(event, filename);
-};
-```
-
-In this example, saving a file anywhere in the process’ working directory will
-delete the modules from the module cache if the module does not live in
-`node_modules`. This makes the assumption that the implementation of the modules
-in `node_modules` don’t change during the lifetime of the process. Now any
-subsequent calls to `require()` for local modules will return the new
-implementation. Then it executes the handler which just logs out its arguments.
-
-What’s cool is this is that we can change the implementation of `handler.js` and
-new file changes will execute the new version without exiting the Node.js
-process.
-
-### Module cache busting optimization
-
-In the `fs.watch()` callback we looped through the entire `require.cache` and
-deleted from it the modules that don’t live in `node_modules`. This operation is
-pretty fast on my machine, but not entirely optimal. What’s optimal is if we
-deleted only the updated module, and all of that module’s dependents because
-otherwise they would be referencing an older version of the updated module.
-
-To achieve something like that we would need to have a dependency graph of our
-modules during the lifetime of the process. For this I had to dig into how
-Node.js implements its module system. For example have you ever wondered how
-`require()` actually works? Frank K. Schott has an excellent [blog post][f] on
-that very topic.
-
-My idea was to hook into the `require()` calls and build the dependency graph
-that way. This should be possible as long as we can get the module that called
-`require()` and the resolved requested module. It turns out that the `require`
-function that we see in a module is just a wrapper around the `module.require`
-function. `module.require` is implemented on `Module.prototype.require`, so we
-can monkey patch that to build the dependency graph.
-
-Once we have the dependency graph, we can query it for the dependents of the
-update module, and delete the affected modules from the module cache. With that,
-I present to you the optimized cache busting code. It relies on the
-[`dependency-graph`][d] library.
-
-```js
-const fs = require('fs');
-const Module = require('module');
-const path = require('path');
-const { DepGraph } = require('dependency-graph');
-
-const graph = new DepGraph();
-const __require = Module.prototype.require;
-
-Module.prototype.require = function(p) {
-  const module = __require.call(this, p);
-  const moduleName = Module._resolveFilename(p, this);
-  graph.addNode(this.filename);
-  graph.addNode(moduleName);
-  graph.addDependency(this.filename, moduleName);
-  return module;
-};
-
-fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
-  const absFilename = path.resolve(filename);
-
-  if (graph.hasNode(absFilename)) {
-    graph.dependantsOf(absFilename).concat([absFilename]).forEach(module => {
-      delete require.cache[module];
-      graph.removeNode(module);
-    });
-  }
-
-  try {
-    require('./handler')(event, filename);
-  } catch (err) {
-    console.log(err);
-  }
-});
-```
-
-This way of invalidating a module has been extracted to my
-[invalidate-module][i] library. Using that, the above will look like this:
-
-```js
-const fs = require('fs');
+const chokidar = require('chokidar');
 const invalidate = require('invalidate-module');
 const path = require('path');
 
-fs.watch(process.cwd(), { recursive: true }, (event, filename) => {
-  const absFilename = path.resolve(filename);
-
-  invalidate(absFileName);
-
+function build() {
   try {
-    require('./handler')(event, filename);
+    require('./build')();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
+}
+
+const watcher = chokidar.watch('*.js', {
+  ignoreInitial: true,
+});
+
+build();
+
+watcher.on('all', (event, filename) => {
+  invalidate(path.resolve(filename));
+  build();
 });
 ```
 
-### Caveats
+Now `build.js` could be anything you're working on. For me it is a script that
+parses markdown files and combines that with React components to generate a
+static site. I will go into more detail about this in a later blog post.
 
-`fs.watch()` is not 100% consistent across platforms, and the recursive option
-is only supported on OS X and Windows. See the documentation for `fs.watch`
-[here][w]. You can use something like [chokidar][c] instead, which should be
-work better across platforms.
+### invalidate-module details
 
-The dependency graph in the optimized module cache busting will throw an error
-if it detects a cycle. I haven’t bothered to handle that case yet.
+A Node.js process caches calls to `require(module)`. In other words:
 
-### Closing
+```js
+require('./my-module') === require('./my-module'); // true
+```
 
-Be creative with what you can do with such a system, and let me know what you
-come up with! Like I said, I’m using it as a static site generator with React
-and live reloading, and it's been working pretty well.
+Re-running a build script on module file changes only makes sense if we can
+force `require()` to return the newer version of that module.
 
+The [invalidate-module][i] library removes a module and all of its dependents
+from the process' require cache.
+
+Removing all of a module's dependents from the require cache is important.
+
+If we had a module called `Layout.js` that requires `Head.js` and we update
+`Head.js`, then not only is `Head.js` stale, but also its dependent `Layout.js`.
+Next time we require `Layout.js` we better get the newer version that requires
+the new `Head.js`.
+
+Removing a single module from the require cache is pretty simple. A required
+module's exports is stored in `require.cache` keyed by the absolute path to the
+module. So we just need to delete that entry from the cache:
+
+```js
+delete require.cache[require.resolve('./my-module')];
+```
+
+However, removing a module and all of its dependents from `require.cache` is not
+as simple. What [invalidate-module][i] does is it monkey patches the `require()`
+function so that it can keep track of which module required another in a
+dependency graph. Once we have this graph we can then query for the dependents
+of a particular module and then delete all of them from `require.cache`.
+
+### Boilerplate
+
+I released a boilerplate that contains pretty much the example in this post
+[here][b].
+
+### Conclusion
+
+To be honest I don't know how useful this is outside of my static site generator
+with React use case. Let me know if you have more interesting use cases!
+
+[b]: https://github.com/kentor/node-hot-reloading-boilerplate
 [c]: https://github.com/paulmillr/chokidar
-[d]: https://www.npmjs.com/package/dependency-graph
-[f]: http://fredkschott.com/post/2014/06/require-and-the-module-system/
 [i]: https://github.com/kentor/invalidate-module
 [w]: https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener
