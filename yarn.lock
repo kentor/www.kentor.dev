@@ -872,9 +872,9 @@ babel-polyfill@^6.20.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-preset-env@1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.5.1.tgz#d2eca6af179edf27cdc305a84820f601b456dd0b"
+babel-preset-env@1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.5.2.tgz#cd4ae90a6e94b709f97374b33e5f8b983556adef"
   dependencies:
     babel-plugin-check-es2015-constants "^6.22.0"
     babel-plugin-syntax-trailing-function-commas "^6.22.0"
@@ -3096,9 +3096,9 @@ fined@^1.0.1:
     lodash.pick "^4.2.1"
     parse-filepath "^1.0.1"
 
-firebase-tools@3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-3.9.0.tgz#15dbab08a2056714e0a6e7c7bc8c990bfded173a"
+firebase-tools@3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-3.9.1.tgz#b62be2b456418a57bf1a8cf8b01a6b8f78f6c1b0"
   dependencies:
     JSONStream "^1.2.1"
     archiver "^0.16.0"
@@ -3419,9 +3419,9 @@ github-slugger@^1.0.0:
   dependencies:
     emoji-regex ">=6.0.0 <=6.1.1"
 
-github-url-to-object@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/github-url-to-object/-/github-url-to-object-3.1.0.tgz#160a5d55ad7cf0459e0757f7912d718076b7ed7d"
+github-url-to-object@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/github-url-to-object/-/github-url-to-object-4.0.0.tgz#a337ba58219c16ea82d3c9cc9bc1098371c6d1c7"
   dependencies:
     is-url "^1.1.0"
 
@@ -5160,14 +5160,14 @@ markdown-it@^8.2.0:
     mdurl "^1.0.1"
     uc.micro "^1.0.3"
 
-marky-markdown@10:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/marky-markdown/-/marky-markdown-10.0.0.tgz#eb28862a63f9a720055b0118fbbb41dc5fe782a0"
+marky-markdown@11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/marky-markdown/-/marky-markdown-11.0.0.tgz#a0808993d08f0fa784a82134ba32210af9d64962"
   dependencies:
     atom-language-diff "^1.0.0"
     atom-language-nginx "^0.6.1"
     github-slugger "^1.0.0"
-    github-url-to-object "^3.0.0"
+    github-url-to-object "^4.0.0"
     highlights "^2.1.1"
     highlights-tokens "^1.0.1"
     innertext "^1.0.2"
@@ -5273,13 +5273,13 @@ mime-db@~1.25.0:
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.25.0.tgz#c18dbd7c73a5dbf6f44a024dc0d165a1e7b1c392"
 
-mime-types@2.1.13, mime-types@^2.0.4, mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.7:
+mime-types@2.1.13, mime-types@^2.0.4, mime-types@^2.0.8, mime-types@^2.1.11, mime-types@^2.1.12, mime-types@~2.1.11, mime-types@~2.1.7:
   version "2.1.13"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.13.tgz#e07aaa9c6c6b9a7ca3012c69003ad25a39e92a88"
   dependencies:
     mime-db "~1.25.0"
 
-mime-types@^2.1.11, mime-types@~2.1.15:
+mime-types@~2.1.15:
   version "2.1.15"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.15.tgz#a4ebf5064094569237b8cf70046776d09fc92aed"
   dependencies:
@@ -8004,9 +8004,9 @@ timers-browserify@^1.0.1:
   dependencies:
     process "~0.11.0"
 
-tiny-ssg@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/tiny-ssg/-/tiny-ssg-1.0.2.tgz#01ba4035ed14fa6f22b203851c6e4dae0f014bce"
+tiny-ssg@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-ssg/-/tiny-ssg-1.1.0.tgz#7641b35312e1c3dcdf5107f3c6bc439bb448182b"
   dependencies:
     chalk "^1.1.3"
     debounce-promise "^3.0.1"
@@ -8113,9 +8113,9 @@ uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
 
-uglify-js@3.0.13:
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.13.tgz#1871d736aa1e550c728d7e5a6556579e70925d68"
+uglify-js@3.0.15:
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.15.tgz#aacb323a846b234602270dead8a32441a8806f42"
   dependencies:
     commander "~2.9.0"
     source-map "~0.5.1"
