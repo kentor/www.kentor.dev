@@ -2,6 +2,12 @@
 title: Static site generation and live reloading with React and Node.js
 ---
 
+<div style="margin: 1em 0">
+<strong>Note:</strong> This is outdated. I now use my
+<a href="https://github.com/kentor/tiny-ssg">tiny-ssg</a> library to generate my
+blog. Read about tiny-ssg <a href="/posts/introducing-tiny-ssg/">here</a>.
+</div>
+
 This is a high level overview of how I've implemented the static site generator
 with live reloading for this blog using React and Node.js APIs. It does not use
 Webpack, Browserify, or any other bundling system which I think is overkill for
