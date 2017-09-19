@@ -1,7 +1,7 @@
 ---
 extends:
   - kentor
-  - kentor/es6
+  - kentor/es
   - kentor/react
 parserOptions:
   ecmaVersion: 2017
