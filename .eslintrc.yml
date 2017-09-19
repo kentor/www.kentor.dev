@@ -3,7 +3,22 @@ extends:
   - kentor
   - kentor/es
   - kentor/react
-parserOptions:
-  ecmaVersion: 2017
+  - prettier
+parser: babel-eslint
+plugins:
+  - prettier
 rules:
+  camelcase: [2, {properties: never}]
   no-func-assign: 0
+
+  prettier/prettier: 2
+
+  react/jsx-closing-bracket-location: 0
+  react/jsx-closing-tag-location: 0
+  react/jsx-curly-spacing: 0
+  react/jsx-equals-spacing: 0
+  react/jsx-first-prop-new-line: 0
+  react/jsx-indent: 0
+  react/jsx-max-props-per-line: 0
+  react/jsx-tag-spacing: 0
+  react/jsx-wrap-multilines: 0
