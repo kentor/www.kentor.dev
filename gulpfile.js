@@ -18,7 +18,8 @@ const processors = [
 ];
 
 gulp.task('css', () => {
-  return gulp.src('assets/css/app.css')
+  return gulp
+    .src('assets/css/app.css')
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
     .pipe(sourcemaps.write())
@@ -30,32 +31,41 @@ gulp.task('css:watch', ['css'], () => {
 });
 
 gulp.task('css:build', () => {
-  return gulp.src('assets/css/app.css')
+  return gulp
+    .src('assets/css/app.css')
     .pipe(postcss(processors))
-    .pipe(uncss({
-      html: ['public/**/*.html'],
-    }))
-    .pipe(cssnano({
-      discardComments: {
-        removeAll: true,
-      },
-    }))
+    .pipe(
+      uncss({
+        html: ['public/**/*.html'],
+      }),
+    )
+    .pipe(
+      cssnano({
+        discardComments: {
+          removeAll: true,
+        },
+      }),
+    )
     .pipe(gulp.dest('public'));
 });
 
 gulp.task('rev', () => {
-  return gulp.src('public/**/*')
-    .pipe(rev.revision({
-      dontRenameFile: ['.html', '.json', '.xml'],
-      dontUpdateReference: ['.html', '.json', '.xml'],
-    }))
+  return gulp
+    .src('public/**/*')
+    .pipe(
+      rev.revision({
+        dontRenameFile: ['.html', '.json', '.xml'],
+        dontUpdateReference: ['.html', '.json', '.xml'],
+      }),
+    )
     .pipe(gulp.dest('public'))
     .pipe(rev.manifestFile())
     .pipe(gulp.dest('public'));
 });
 
 gulp.task('static', () => {
-  return gulp.src('static/**/*', { base: 'static' })
+  return gulp
+    .src('static/**/*', { base: 'static' })
     .pipe(newer('public'))
     .pipe(gulp.dest('public'));
 });
@@ -73,12 +83,6 @@ gulp.task('static:watch', () => {
   });
 });
 
-gulp.task('build', [
-  'css:build',
-  'static',
-]);
+gulp.task('build', ['css:build', 'static']);
 
-gulp.task('watch', [
-  'css:watch',
-  'static:watch',
-]);
+gulp.task('watch', ['css:watch', 'static:watch']);
