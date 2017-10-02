@@ -6,8 +6,9 @@ You might have run into situations where you're calling asynchronous code inside
 of a callback of some framework, and you need to test their side effects. For
 example, you might be making API calls inside of a React component's
 `componentDidMount()` callback that will in turn call `setState()` when the
-request has completed, and you want to assert that the component is in a certain
-state. This article shows techniques for testing these types of scenarios.
+request has completed, and you might want to assert that the component is in a
+certain state. This article shows techniques for testing these types of
+scenarios.
 
 Take a simplified example. We have a class called
 `PromisesHaveFinishedIndicator`. The constructor takes in a list of promises.
@@ -65,11 +66,10 @@ test('sets finished to true after all promises have resolved', () => {
 });
 ```
 
-This test will actually fail because promise callbacks are asynchronous, in
-other words they will be queued and will only run after the last statement of
-this test due to [run to completion][r] semantics. In other words the promise
-callback for the `Promise.all` call: `() => { this.finished = true; }` will have
-run after this test has already exited!
+If you tried running this test it will actually fail because promise callbacks
+are asynchronous. In other words, the promise's `onFulfilled` callback, the one
+setting `this.finished = true`, will be queued and ran after the last statement
+of this test due to [run to completion][r] semantics.
 
 Jest (and other testing frameworks) provides a way to deal with asynchrony by
 preventing the test from exiting after the last statement. We would have to call
@@ -99,12 +99,36 @@ test('sets finished to true after all promises have resolved', (done) => {
 ```
 
 However this will also fail. The reason lies in the implementation of
-`Promise.all`. When `resolve` is called on `d1` (and `d2` as well),
-`Promise.all` schedules a callback that checks whether all promises have
-resolved. If this check returns true, it will resolve the promise returned from
-the `Promise.all` call which would then enqueue the `() => { this.finished =
-true; }` callback. This callback is still sitting in the queue by the time
-`done` is called!
+`Promise.all` which can be thought of to look something like this:
+
+```js
+Promise.all = (promises) => {
+  const numPromises = promises.length;
+  const results = [];
+  let numFulfilled = 0;
+
+  return new Promise((resolve, reject) => {
+    promises.forEach((promise, i) => {
+      promise.then(result => {
+        results[i] = result;
+        numFulfilled += 1;
+        if (numFulfilled === numPromises) {
+          resolve(results);
+        }
+      }, err => {
+        reject(err);
+      });
+    });
+  });
+};
+```
+
+When `resolve` is called on `d1` (and `d2` as well), the
+implementation of `Promise.all` schedules an `onFulfilled` callback that checks
+whether all promises have resolved. If this check returns true, it will resolve
+the promise returned from the `Promise.all` call which would then enqueue the  `() => {
+this.finished = true; }` callback. This callback is still sitting in the queue
+by the time `done` is called!
 
 Now the question is how do we make the callback that sets `this.finished` to
 `true` to run before calling `done`? To answer this we need to understand how
@@ -123,7 +147,7 @@ With this knowledge, we can make this test pass by using `setTimeout` instead of
 `then()`:
 
 ```js
-test('sets finished to true after all promises have resolved', (done) => {
+test('sets finished to true after all promises have resolved', done => {
   const d1 = new Deferred();
   const d2 = new Deferred();
 
@@ -147,9 +171,8 @@ test('sets finished to true after all promises have resolved', (done) => {
 The reason this works is because by the time second `setTimeout` callback runs,
 we know that these promise callbacks have run:
 
-- The callbacks inside the implementation of `Promise.all` that checks that all
-  promises have resolved. These are the callbacks attached to `d1.then` and
-  `d2.then` by `Promise.all`.
+- The callbacks attached to `d1.then` and `d2.then` by the implementation of
+  `Promise.all`.
 - The callback that sets `this.finished = true`.
 
 Having a bunch of `setTimeout(fn, 0)` in our code is unsightly to say the least.
