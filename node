@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 exec node \
-  --harmony_object_rest_spread \
   -r dotenv/config \
   -r loud-rejection/register \
   -r babel-register \
