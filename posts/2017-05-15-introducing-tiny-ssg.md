@@ -43,9 +43,9 @@ used to generate each post, the index, and feed pages.
 Please refer to the [README][t] of tiny-ssg for how to get started and for
 examples involving markdown and React.
 
-[b]: https://github.com/kentor/kentor.me/blob/master/lib/scripts/build.js
+[b]: https://github.com/kentor/www.kentor.dev/blob/master/lib/scripts/build.js
 [c]: https://github.com/paulmillr/chokidar
 [i]: https://github.com/kentor/invalidate-module
 [n]: https://www.npmjs.com/
-[s]: https://kentor.me/posts/static-site-generation-and-live-reloading-with-react-and-node-js/
+[s]: https://www.kentor.dev/posts/static-site-generation-and-live-reloading-with-react-and-node-js/
 [t]: https://github.com/kentor/tiny-ssg
