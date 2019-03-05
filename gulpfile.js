@@ -1,9 +1,6 @@
 const cssnano = require('gulp-cssnano');
 const cssnext = require('postcss-cssnext');
-const fs = require('fs-extra');
 const gulp = require('gulp');
-const newer = require('gulp-newer');
-const path = require('path');
 const postcss = require('gulp-postcss');
 const postcssImport = require('postcss-import');
 const rev = require('gulp-rev-all');
@@ -63,26 +60,6 @@ gulp.task('rev', () => {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('static', () => {
-  return gulp
-    .src('static/**/*', { base: 'static' })
-    .pipe(newer('public'))
-    .pipe(gulp.dest('public'));
-});
+gulp.task('build', ['css:build']);
 
-gulp.task('static:watch', () => {
-  const dest = path.resolve('public');
-  const src = path.resolve('static');
-
-  const watcher = gulp.watch('static/**/*', ['static']);
-
-  watcher.on('change', event => {
-    if (event.type === 'deleted') {
-      fs.remove(event.path.replace(src, dest));
-    }
-  });
-});
-
-gulp.task('build', ['css:build', 'static']);
-
-gulp.task('watch', ['css:watch', 'static:watch']);
+gulp.task('watch', ['css:watch']);
