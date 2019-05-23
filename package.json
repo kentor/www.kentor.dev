@@ -64,7 +64,7 @@
     "postcss-cssnext": "3.0.2",
     "postcss-import": "11.0.0",
     "react": "16.1.0",
-    "react-dom": "16.1.0",
+    "react-dom": "16.1.2",
     "reuse-promise": "1.1.0",
     "rimraf": "2.6.2",
     "rss": "1.2.2",
